@@ -53,7 +53,17 @@ class Encoder:
         判断电机的旋转方向
             - add_filter: 是否添加滤波
         '''
-        ''''
+        self.value_a = self.pin_a.value()
+        # 添加软件消抖
+        utime.sleep_ms(20)
+        self.value_b = self.pin_b.value()
+        if self.value_b == 1:
+            self.motor_dir = True
+        else:
+            self.motor_dir = False
+            
+        return self.motor_dir
+        '''
         # 中断的引脚采样
         # 1 -> 上升沿触发
         # 0 -> 下降沿触发
@@ -78,8 +88,6 @@ class Encoder:
         else:
             self.value_a,self.value_b = dir_pin_value, irq_pin_value
         
-
-
         # 电机方向判定
         motor_dir = None
         if is_irq_rising:
@@ -104,16 +112,7 @@ class Encoder:
 
         return motor_dir
         '''
-        self.value_a = self.pin_a.value()
-        # 添加软件消抖
-        utime.sleep_ms(20)
-        self.value_b = self.pin_b.value()
-        if self.value_b == 1:
-            self.motor_dir = True
-        else:
-            self.motor_dir = False
-            
-        return self.motor_dir
+        
     def update_encoder_cnt(self):
         '''
         更新编码器的计数
