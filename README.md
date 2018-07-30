@@ -1,7 +1,5 @@
 # esp32-wifi-car
 
-
-
 小车由**1Z实验室出品** 
 
 1ZLAB: Make Things Easy
@@ -21,7 +19,22 @@
 
 
 
+
+## 关于1Z实验室
+
+1Z实验室推出这款小车的目的在于可以让学员可以结合计算机视觉与小车进行项目实战。
+
+但是目前还没有令阿凯满意的MicroPython-ESP32小车方案，所以才自己开始造轮子。
+
+
+
+![1zlab](./image/poster.png)
+
+
+
 ## 贡献者(Ccontributor)
 
-* 阿凯-1Z实验室
-* 刘新宇-廊坊师范
+- [阿凯-1Z实验室](https://github.com/mushroom-x)
+- [刘新宇-廊坊师范](https://github.com/LiuXinyu12378)
+- 平衡小车之家
+
