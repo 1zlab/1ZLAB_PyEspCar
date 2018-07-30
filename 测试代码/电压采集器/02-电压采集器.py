@@ -19,7 +19,7 @@ IO35 - 电压采集
 TODO 添加航模电池过放检测 好险!
 TODO 尝试采样2000次, 电池采样 20s/次
 TODO 充满电在6.8v左右 ?
-
+TODO 采用平滑滤波
 '''
 from machine import ADC,Pin,Timer
 import utime

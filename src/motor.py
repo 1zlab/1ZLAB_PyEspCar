@@ -3,20 +3,9 @@
 
 speed的范围是-1023 至 1023
 
-电机死区 ：-250 - 250
-pwm信号在这个范围是不转的
-
+备注：电机死区 ：-250 - 250， pwm信号在这个范围是不转的
 '''
 from machine import Pin,PWM
-
-# 控制右侧电机(正向)
-A4950T_AIN1 = 25 # 对应UNO底板 D3
-A4950T_AIN2 = 27 # 对应UNO底板 D6
-
-# A4950T 电机驱动引脚 GPIO编号
-# 控制左侧电机(反向)
-A4950T_BIN1 = 23 # 对应UNO底板 D11
-A4950T_BIN2 = 15 # 对应UNO底板 D5
 
 class Motor:
     def __init__(self, gpio_a, gpio_b, motor_install_dir=True, motor_dead_block=250, speed=0):
