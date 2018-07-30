@@ -7,10 +7,6 @@
 
 电压不变的条件下， 编码器采集的数据不稳定
 
-LM INTER: 437 RM INTER:418
-LM Speed: 134 RM Speed:193
-LM INTER: 893 RM INTER:849
-
 '''
 from Encoder import *
 from machine import Timer

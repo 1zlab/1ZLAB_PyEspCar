@@ -1,4 +1,4 @@
-
+# 存在问题
 
 ## 关于ADC的问题
 
@@ -29,7 +29,7 @@ https://github.com/BramRausch/encoderLib
 ESP32 是否有硬件计数?
 
 
-## [TODO]增量式编码器使用
+## [已解决]增量式编码器使用
 编码器噪声问题 不是完全按照 0132的顺序来的。
 
 两个引脚都是中断。
@@ -46,12 +46,16 @@ TODO 寻找项目参考
 https://blog.csdn.net/cuhkljt/article/details/25845217
 https://item.taobao.com/item.htm?spm=a230r.1.14.27.63de2886VbW8iL&id=45347924687&ns=1&abbucket=6#detail
 
+
+**ESP32的IRQ是软件中断，相应速度不够， 改用定时器问题就解决了**
+
+
 ## 刷固件
 
 刷固件， 需要把ESP32开发板从底板下取下。
+> 有时需要有时不需要
 
 ## 声明引脚输入输出是个好习惯
-
 Pin.IN
 Pin.OUT
 
@@ -59,5 +63,18 @@ Pin.OUT
 
 Problem 左侧电机一动，reboot -> 更换引脚已解决 （因为用了D2接口）
 
+
 ## [Done]电机只能反转不能正转？
 电机驱动模块插反
+**电机驱动模块有正反**
+
+## Flash损坏，不稳定
+
+ERRORS
+----main.py文件损毁？---
+rst:0x1 (POWERON_RESET),boot:0x33 (SPI_FAST_FLASH_BOOT)
+flash read err, 1000
+ets_main.c 371 
+ets Jun  8 2016 00:22:57
+
+

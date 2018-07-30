@@ -15,6 +15,7 @@ IO35 - 电压采集
 过放: 6.4v
 
 充电所需时间, 大概是1h
+
 TODO 添加航模电池过放检测 好险!
 TODO 尝试采样2000次, 电池采样 20s/次
 TODO 充满电在6.8v左右 ?
@@ -62,6 +63,9 @@ BV_SAMPLE_PERIOD = 2000 # 采样次数为2000,
 bv_sample_num = 0
 bv_sum = 0
 def bv_sample(timer):
+    '''
+    电压采样
+    '''
     global bv_adc
     global BV_SAMPLE_PERIOD
     global battery_vol

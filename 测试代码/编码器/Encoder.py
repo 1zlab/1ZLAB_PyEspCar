@@ -47,7 +47,7 @@ class Encoder:
         # self.pin_b.irq(trigger=Pin.IRQ_FALLING | Pin.IRQ_RISING, handler = self.irq_callback)
 
         self.is_debug = is_debug
-    
+
     def get_motor_rotate_dir(self, irq_pin):
         '''
         判断电机的旋转方向
@@ -55,7 +55,7 @@ class Encoder:
         '''
         self.value_a = self.pin_a.value()
         # 添加软件消抖
-        utime.sleep_ms(20)
+        # utime.sleep_ms(20)
         self.value_b = self.pin_b.value()
         if self.value_b == 1:
             self.motor_dir = True
