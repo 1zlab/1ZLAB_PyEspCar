@@ -104,4 +104,4 @@ venv.bak/
 .mypy_cache/
 
 原理图与底板PCB/
-测试代码/
+TestCode/
