@@ -1,14 +1,14 @@
 '''
 驱动电机
 
-speed的范围是-1023 至 1023
+pwm的范围是-1023 至 1023
 
 备注：电机死区 ：-250 - 250， pwm信号在这个范围是不转的
 '''
 from machine import Pin,PWM
 
 class Motor:
-    def __init__(self, gpio_a, gpio_b, motor_install_dir=True, motor_dead_block=250, speed=0):
+    def __init__(self, gpio_a, gpio_b, motor_install_dir=True, motor_dead_block=250, pwm=0):
 
         # 电机安装方向
         self.motor_install_dir = motor_install_dir
@@ -29,8 +29,8 @@ class Motor:
             
 
         self.motor_dead_block =  motor_dead_block
-        self.speed = speed
-        self.set_speed(self.speed)
+        self.pwm = pwm
+        self.set_pwm(self.pwm)
 
     def stop(self):
         '''
@@ -40,24 +40,24 @@ class Motor:
         # 设置占空比
         self.pwm.duty(0)
 
-    def set_speed(self, speed):
+    def set_pwm(self, pwm):
         '''
         设置小车的速度
         '''
-        print('set speed: {}'.format(speed))
-        if abs(speed) < self.motor_dead_block:
-            print("Motor Dead Block: {}".format(speed))
-            # speed为电机死区
-            self.speed = 0
+        print('set pwm: {}'.format(pwm))
+        if abs(pwm) < self.motor_dead_block:
+            print("Motor Dead Block: {}".format(pwm))
+            # pwm为电机死区
+            self.pwm = 0
             self.stop()
 
         else:
             # 电机正向安装  
-            # speed的取值范围 -1000 - 1000
-            if speed >= 0:
+            # pwm的取值范围 -1000 - 1000
+            if pwm >= 0:
                 self.enable_pin.value(0)
-                self.pwm.duty(speed)
+                self.pwm.duty(pwm)
             else:
                 self.enable_pin.value(1)
-                self.pwm.duty(1023 + speed)
+                self.pwm.duty(1023 + pwm)
 
