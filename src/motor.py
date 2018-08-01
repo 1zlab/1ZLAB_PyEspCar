@@ -21,11 +21,11 @@ class Motor:
         if motor_install_dir:
             # 电机正向安装
             self.enable_pin = self.pin_a      
-            self.pwm = PWM(self.pin_b, freq=1000)
+            self.pwm_pin = PWM(self.pin_b, freq=1000)
         else:
             # 电机反向安装
             self.enable_pin = self.pin_b    
-            self.pwm = PWM(self.pin_a, freq=1000)
+            self.pwm_pin = PWM(self.pin_a, freq=1000)
             
 
         self.motor_dead_block =  motor_dead_block
@@ -44,20 +44,32 @@ class Motor:
         '''
         设置小车的速度
         '''
-        print('set pwm: {}'.format(pwm))
+        # print('set pwm: {}'.format(pwm))
         if abs(pwm) < self.motor_dead_block:
-            print("Motor Dead Block: {}".format(pwm))
+            # print("Motor Dead Block: {}".format(pwm))
             # pwm为电机死区
-            self.pwm = 0
-            self.stop()
-
-        else:
-            # 电机正向安装  
-            # pwm的取值范围 -1000 - 1000
-            if pwm >= 0:
-                self.enable_pin.value(0)
-                self.pwm.duty(pwm)
+            # self.pwm = 0
+            # self.stop()
+            
+            # pwm为电机死区
+            if pwm <  0:
+                pwm = -1*self.motor_dead_block
             else:
-                self.enable_pin.value(1)
-                self.pwm.duty(1023 + pwm)
+                pwm = self.motor_dead_block
+            
+        if abs(pwm) > 1023:
+            # 判断pwm的绝对值是否
+            if pwm <  0:
+                pwm = -1023
+            else:
+                pwm = 1023
+        
+        # 电机正向安装  
+        # pwm的取值范围 -1023 - 1023
+        if pwm >= 0:
+            self.enable_pin.value(0)
+            self.pwm_pin.duty(pwm)
+        else:
+            self.enable_pin.value(1)
+            self.pwm_pin.duty(1023 + pwm)
 

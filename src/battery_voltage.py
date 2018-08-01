@@ -1,4 +1,3 @@
-from machine import Pin,Timer,ADC
 '''
 对电池电压进行采样
 -------------------
@@ -6,6 +5,7 @@ from machine import Pin,Timer,ADC
 满电或者过放都不好,需要检测电压值是否低于某个特定的值, 
 如果低于的话, 电机停止工作.
 '''
+from machine import Pin,Timer,ADC
 import utime
 
 class BatteryVoltage(object):

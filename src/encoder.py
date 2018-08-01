@@ -35,7 +35,7 @@ class Encoder(object):
         
         # 是否开启Debug模式
         self.is_debug = is_debug
-    
+        
     def callback(self,timer):
         '''
         回调函数
