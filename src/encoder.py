@@ -44,36 +44,51 @@ class Encoder(object):
         self.new_a = self.pin_a.value()    
         # 更新B相电平
         self.new_b = self.pin_b.value()
-
+        
         if not self.last_a and self.new_a:
+            print('*1')
             # 检测到编码器A相上升沿 RISING
             if self.new_b:
-                self.count += 1
-            else:
+                print('-1')
                 self.count -= 1
+            else:
+                print('+1')
+                self.count += 1
         elif self.last_a and not self.new_a:
+            print('*2')
             # 检测到编码器A相下降沿 FALLING
             if self.new_b:
-                self.count -= 1
-            else:
+                print('+1')
                 self.count += 1
+            else:
+                print('-1')
+                self.count -= 1 
         elif not self.last_b and self.new_b:
+            print('*3')
             # 检测到编码器B相上升沿 RASING
             if self.new_a:
-                self.count -= 1
-            else:
+                print('+1')
                 self.count += 1
+            else:
+                print('-1')
+                self.count -= 1
         elif self.last_b and not self.new_b:
+            print('*4')
             # 检测到编码器B相下降沿 FALLING
             if self.new_a:
-                self.count += 1
-            else:
+                print('-1')
                 self.count -= 1
-
+            else:
+                print('+1')
+                self.count += 1
+        if self.is_debug:
+            # 打印计数器信息
+            if self.last_a != self.new_a or self.last_b != self.new_b:
+                # 计数器变换再打印
+                print('{} Counter: {}'.format(self.name, self.count))
+                print('last_a:{} new_a:{} last_b:{} new_b: {}'.format(self.last_a, self.new_a, self.last_b, self.new_b))
         # 更新电平历史
         self.last_a = self.new_a
         self.last_b = self.new_b
 
-        if self.is_debug:
-            # 打印计数器信息
-            print('{} Counter: {}'.format(self.name, self.count))
+        

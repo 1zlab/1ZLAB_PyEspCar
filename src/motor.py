@@ -38,7 +38,7 @@ class Motor:
         '''
         self.enable_pin.value(0) # 高电平
         # 设置占空比
-        self.pwm.duty(0)
+        self.pwm_pin.duty(0)
 
     def set_pwm(self, pwm):
         '''
@@ -63,7 +63,7 @@ class Motor:
                 pwm = -1023
             else:
                 pwm = 1023
-        
+        self.pwm = pwm
         # 电机正向安装  
         # pwm的取值范围 -1023 - 1023
         if pwm >= 0:

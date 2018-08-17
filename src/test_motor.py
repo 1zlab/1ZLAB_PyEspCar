@@ -1,6 +1,9 @@
 from car_config import gpio_dict
 from motor import Motor
 
+'''
+TODO 电机不转了
+'''
 
 
 # 左侧电机
