@@ -17,7 +17,7 @@ ESP32的小车底板正在研发中。 这款小车最后项目预期是可以�
 ## 贡献者(Ccontributor)
 
 - [阿凯-1Z实验室](https://github.com/mushroom-x)
-- [小峰-1Z实验室](https://github.com/Tolerance-v)
+- [小峰-1Z实验室](https://github.com/rose-w)
 - [小葱-1Z实验室](https://github.com/littleoniononion)
 
 
