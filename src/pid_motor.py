@@ -3,7 +3,7 @@ from pid import PID
 
 class MotorAngleControl(object):
     '''
-    电机的角度控制PID
+    电机旋转角度PID控制
     使用PID，结合编码器提供的反馈
     每隔100ms采样一次
     '''
@@ -12,24 +12,29 @@ class MotorAngleControl(object):
         self.motor = motor
         # 编码器
         self.encoder = encoder
+        self.encoder.count = 0
         # 角度与编码器计数之间的缩放因子
         self.scalar = 1
         # PID对象
         self.pid = PID(kp, ki, kd)
-        # 创建定时器
+        # 创建定时器 
+        # TODO 这里用的是定时器4
         self.timer = Timer(4)
         # 设置定时器回调 100ms执行一次
-        self.timer.init(period=100, mode=Timer.PERIODIC, callback=self.callback)
+        # TODO 测试10ms更新一次
+        self.timer.init(period=10, mode=Timer.PERIODIC, callback=self.callback)
         # 是否重置计数器
         self.is_reset = False
-        
+        # 是否开启调试模式
+        self.is_debug = is_debug
+
     def count2angle(self, count):
         '''
         将编码器计数转换为角度
         '''
         return count * self.scalar
 
-    def angle2count(angle):
+    def angle2count(self, angle):
         '''
         将角度转换为编码器计数
         '''
@@ -66,14 +71,35 @@ class MotorAngleControl(object):
         real_value = self.encoder.count
         # 更新PID
         result = self.pid.update(real_value)
-        if self.is_debug:
-            print("Target: {} RealValue: {} PID Result: {}".format(self.pid.target_value, self.motor.count, result))
+        
         # 将result转换为电机转速
-        pwm = 1*result
+        pwm = self.scalar*result
         # pwm的值放缩在 正负250-1023之间
-        self.motor.set_pwm(pwm)
+        # TODO ? pwm 也可以是0啊
+        if abs(pwm) > 300:
+            if pwm > 0:
+                pwm = 300
+            elif pwm < 0:
+                pwm = -300
+        '''
+        elif abs(pwm) > 10 and abs(pwm) < 250:
+            if pwm > 0:
+                pwm = 250
+            elif pwm < 0:
+                pwm = -250
+        '''
+        
+        self.motor.set_pwm(int(pwm))
+        if self.is_debug:
+            print("Target: {} RealValue: {} PID Result: {}".format(self.pid.target_value, self.encoder.count, result))
+            print('PWM: {}'.format(pwm))
+
+        
         
 class MotorSpeedPID(object):
+    '''
+    电机速度PID控制
+    '''
     def __init__(self, motor, encoder):
         pass
         

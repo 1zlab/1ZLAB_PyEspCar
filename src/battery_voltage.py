@@ -9,7 +9,7 @@ from machine import Pin,Timer,ADC
 import utime
 
 class BatteryVoltage(object):
-
+    
     def __init__(self, gpio_id, timer_id=1, is_debug=False):
         self.BV_SAMPLE_PERIOD = 1 # 采样周期(次数)为2000次
         self.OVER_DISCHARGE_VOLTAGE = 6.4 # 过放电压参考值

@@ -17,6 +17,9 @@ class PID(object):
         self.bias_sum = 0   # 累积误差
     
     def set_target_value(self, target_value):
+        '''
+        设置目标值
+        '''
         self.target_value = target_value
 
     def update(self, real_value):

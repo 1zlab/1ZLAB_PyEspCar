@@ -9,7 +9,7 @@ from machine import Pin,PWM
 
 class Motor:
     def __init__(self, gpio_a, gpio_b, motor_install_dir=True, motor_dead_block=250, pwm=0):
-
+        
         # 电机安装方向
         self.motor_install_dir = motor_install_dir
         # A相引脚
@@ -43,8 +43,11 @@ class Motor:
     def set_pwm(self, pwm):
         '''
         设置小车的速度
+        pwm的范围在 250 - 1023之间 自动放缩
+        TODO 先不设定死区 暂且注释掉
         '''
         # print('set pwm: {}'.format(pwm))
+        '''
         if abs(pwm) < self.motor_dead_block:
             # print("Motor Dead Block: {}".format(pwm))
             # pwm为电机死区
@@ -52,17 +55,16 @@ class Motor:
             # self.stop()
             
             # pwm为电机死区
-            if pwm <  0:
-                pwm = -1*self.motor_dead_block
-            else:
-                pwm = self.motor_dead_block
-            
+            pwm = 0
+        '''
+
         if abs(pwm) > 1023:
             # 判断pwm的绝对值是否
             if pwm <  0:
                 pwm = -1023
             else:
                 pwm = 1023
+        
         self.pwm = pwm
         # 电机正向安装  
         # pwm的取值范围 -1023 - 1023
