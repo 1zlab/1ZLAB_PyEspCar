@@ -16,13 +16,11 @@ ESP32的小车底板正在研发中。 这款小车最后项目预期是可以�
 
 ## 贡献者(Ccontributor)
 
-- [阿凯-1Z实验室](https://github.com/mushroom-x)
-- [小峰-1Z实验室](https://github.com/Tolerance-v)
-- [小葱-1Z实验室](https://github.com/littleoniononion)
-
-
-- [刘新宇-廊坊师范](https://github.com/LiuXinyu12378)
-- [平衡小车之家](http://minibalance.com/)
+* [阿凯-1Z实验室](https://github.com/mushroom-x)
+* [小峰-1Z实验室](https://github.com/Tolerance-v)
+* [小葱-1Z实验室](https://github.com/littleoniononion)
+* [刘新宇-廊坊师范](https://github.com/LiuXinyu12378)
+* [杨子豪-平衡小车之家](http://minibalance.com/)
 
 ## 关于1Z实验室
 

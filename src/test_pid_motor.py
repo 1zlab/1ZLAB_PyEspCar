@@ -16,7 +16,8 @@ rmotor.stop()
 lencoder = Encoder(gpio_dict['LEFT_ENCODER_A'], gpio_dict['LEFT_ENCODER_B'], 
         3, motor_install_dir=False,name='LeftEncoder', is_debug=True)
 
-mac = MotorAngleControl(lmotor, lencoder, kp=-50, ki=0, kd=-10, is_debug=True)
+mac = MotorAngleControl(lmotor, lencoder, kp=-250, ki=0, kd=0, is_debug=False, scalar=4.5)
+# 90度 差不多是20个脉冲（不稳）
 mac.set_angle(90, is_reset=False)
 
 

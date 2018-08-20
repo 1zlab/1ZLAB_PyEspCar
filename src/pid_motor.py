@@ -7,14 +7,14 @@ class MotorAngleControl(object):
     使用PID，结合编码器提供的反馈
     每隔100ms采样一次
     '''
-    def __init__(self, motor, encoder, kp, ki=0, kd=0, is_debug=False):
+    def __init__(self, motor, encoder, kp, ki=0, kd=0, is_debug=False, scalar=4.5):
         # 电机对象
         self.motor = motor
         # 编码器
         self.encoder = encoder
         self.encoder.count = 0
         # 角度与编码器计数之间的缩放因子
-        self.scalar = 1
+        self.scalar = scalar
         # PID对象
         self.pid = PID(kp, ki, kd)
         # 创建定时器 
@@ -22,7 +22,7 @@ class MotorAngleControl(object):
         self.timer = Timer(4)
         # 设置定时器回调 100ms执行一次
         # TODO 测试10ms更新一次
-        self.timer.init(period=10, mode=Timer.PERIODIC, callback=self.callback)
+        self.timer.init(period=1, mode=Timer.PERIODIC, callback=self.callback)
         # 是否重置计数器
         self.is_reset = False
         # 是否开启调试模式
@@ -73,7 +73,7 @@ class MotorAngleControl(object):
         result = self.pid.update(real_value)
         
         # 将result转换为电机转速
-        pwm = self.scalar*result
+        pwm = 1.0*result
         # pwm的值放缩在 正负250-1023之间
         # TODO ? pwm 也可以是0啊
         if abs(pwm) > 300:
@@ -81,6 +81,7 @@ class MotorAngleControl(object):
                 pwm = 300
             elif pwm < 0:
                 pwm = -300
+        
         '''
         elif abs(pwm) > 10 and abs(pwm) < 250:
             if pwm > 0:

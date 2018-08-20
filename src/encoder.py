@@ -29,14 +29,15 @@ class Encoder(object):
         # 定时器计数
         self.count = 0
         # 定时器
-        self.timer = Timer(timer_id)
+        # self.timer = Timer(timer_id)
         # 定时器 每1ms执行一次
-        self.timer.init(period=1, mode=Timer.PERIODIC, callback=self.callback)
+        # self.timer.init(period=1, mode=Timer.PERIODIC, callback=self.callback)
         
         # 是否开启Debug模式
         self.is_debug = is_debug
         
-    def callback(self,timer):
+    # def callback(self,timer):
+    def callback(self):
         '''
         回调函数
         '''
@@ -56,7 +57,8 @@ class Encoder(object):
             if self.new_b:
                 self.count += 1
             else:
-                self.count -= 1 
+                self.count -= 1
+        '''
         elif not self.last_b and self.new_b:
             # 检测到编码器B相上升沿 RASING
             if self.new_a:
@@ -69,6 +71,7 @@ class Encoder(object):
                 self.count -= 1
             else:
                 self.count += 1
+        '''
         if self.is_debug:
             # 打印计数器信息
             if self.last_a != self.new_a or self.last_b != self.new_b:
