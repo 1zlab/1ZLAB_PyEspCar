@@ -12,7 +12,7 @@ class MotorAngleControl(object):
         self.motor = motor
         # 编码器
         self.encoder = encoder
-        self.encoder.count = 0
+        self.encoder.position = 0
         # 角度与编码器计数之间的缩放因子
         self.scalar = scalar
         # PID对象
