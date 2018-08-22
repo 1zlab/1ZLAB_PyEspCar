@@ -76,20 +76,6 @@ class MotorAngleControl(object):
         pwm = 1.0*result
         # pwm的值放缩在 正负250-1023之间
         # TODO ? pwm 也可以是0啊
-        if abs(pwm) > 300:
-            if pwm > 0:
-                pwm = 300
-            elif pwm < 0:
-                pwm = -300
-        
-        '''
-        elif abs(pwm) > 10 and abs(pwm) < 250:
-            if pwm > 0:
-                pwm = 250
-            elif pwm < 0:
-                pwm = -250
-        '''
-        
         self.motor.set_pwm(int(pwm))
         if self.is_debug:
             print("Target: {} RealValue: {} PID Result: {}".format(self.pid.target_value, self.encoder.count, result))

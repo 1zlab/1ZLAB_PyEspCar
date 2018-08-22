@@ -19,11 +19,3 @@ lencoder = Encoder(gpio_dict['LEFT_ENCODER_A'], gpio_dict['LEFT_ENCODER_B'],
 mac = MotorAngleControl(lmotor, lencoder, kp=-250, ki=0, kd=0, is_debug=False, scalar=4.5)
 # 90度 差不多是20个脉冲（不稳）
 mac.set_angle(90, is_reset=False)
-
-
-'''
-BUG
-有时候 电机明明反转 计数器+1
-
-旋转电机 复位的时候跟原来的位置差很多
-'''
