@@ -53,7 +53,7 @@ ESP32的小车底板正在研发中。 这款小车最后项目预期是可以�
 
 * **自主设计轻量级二自由度云台**
 
-  ![machine](./image/machine.png)
+  ![machine](./image/PyEspCar-Z1.png)
 
   更适合放在小车上面，同时末端可以承受较大负载（例如手机）。
 
