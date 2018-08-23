@@ -10,6 +10,8 @@
 ![PyESPCar Z1](./image/car-carton.jpg)
 
 > 小车正在投产中，预计9月1号交付第一批PyEspCar Z1
+>
+> 购买小车联系 1Z实验室阿凯  QQ 244561792
 
 
 
@@ -59,7 +61,7 @@ ESP32的小车底板正在研发中。 这款小车最后项目预期是可以�
 
 * **自主设计ESP32小车底板** 
 
-  ![board](./image/boards.png)
+  ![board](./image/boards.jpg)
 
   填补了目前ESP32小车底板的空白，主控采用安信可公司的NodeMCU32s，直插在小车底板上。
 
