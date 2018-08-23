@@ -1,5 +1,5 @@
 from user_button import UserButton
-
+from car_config import gpio_dict
 
 # 小车停止标志位
 stop_flag = False
@@ -15,6 +15,6 @@ def callback(pin):
     print("小车是否停止: {}".format(stop_flag))
 
 # 用户按键引脚编号
-USER_BUTTON = 22
+USER_BUTTON = gpio_dict['USER_BUTTON']
 # 创建UserButton对象
 btn = UserButton(USER_BUTTON, callback)

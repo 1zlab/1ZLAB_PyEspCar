@@ -11,7 +11,7 @@ class Encoder(object):
         self._pos = 0
         self.x_interrupt = pin_x.irq(trigger=Pin.IRQ_RISING | Pin.IRQ_FALLING, handler=self.x_callback)
         self.y_interrupt = pin_y.irq(trigger=Pin.IRQ_RISING | Pin.IRQ_FALLING, handler=self.y_callback)
-
+    
     def x_callback(self, line):
         self.forward = self.pin_x.value() ^ self.pin_y.value() ^ self.reverse
         self._pos += 1 if self.forward else -1

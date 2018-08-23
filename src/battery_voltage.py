@@ -10,8 +10,8 @@ import utime
 
 class BatteryVoltage(object):
     
-    def __init__(self, gpio_id, timer_id=1, is_debug=False):
-        self.BV_SAMPLE_PERIOD = 1 # 采样周期(次数)为2000次
+    def __init__(self, gpio_id, is_debug=False):
+        self.BV_SAMPLE_PERIOD = 100 # 采样周期(次数)为2000次
         self.OVER_DISCHARGE_VOLTAGE = 6.4 # 过放电压参考值
         self.pin = Pin(gpio_id, Pin.IN) # 电压采样引脚
         self.adc = ADC(self.pin) # 创建引脚对应的ADC对象
@@ -23,9 +23,9 @@ class BatteryVoltage(object):
         # 初始化电池电压
         self.init_battery_voltage()
         # 创建一个定时器
-        self.timer = Timer(timer_id) 
+        # self.timer = Timer(timer_id) 
         # 每隔1ms执行一次
-        self.timer.init(period=1, mode=Timer.PERIODIC, callback=self.callback)
+        # self.timer.init(period=1, mode=Timer.PERIODIC, callback=self.callback)
         # 电池是否过放
         self.is_over_discharge = False # 电池是否过放
         # 是否开启调试模式

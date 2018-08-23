@@ -1,8 +1,5 @@
 '''
-PID 
-P 比例 
-I 积分（惯性力）
-D 微分 (阻尼力)
+电机的PID控制(角度，速度)
 '''
 from machine import Timer
 from pid import PID
@@ -10,6 +7,7 @@ from pid import PID
 class MotorAngleControl(object):
     '''
     电机旋转角度PID控制
+    PID：  P比例 I 积分(惯性力) D微分(阻尼力)
     使用PID，结合编码器提供的反馈
     每隔100ms采样一次
     '''
@@ -39,12 +37,13 @@ class MotorAngleControl(object):
         '''
         # 设定目标计数
         target_count = angle
+
         if is_reset:
-            # 计数器清零
+            # 电机角度重置，计数器清零
             self.encoder._pos = 0
+            # 目标计数器加上之前编码器的值
+            target_count += self.encoder.position
         
-        # 目标计数器加上之前编码器的值
-        target_count += self.encoder.position
         # 设置PID的目标取值
         self.pid.set_target_value(target_count)
 
