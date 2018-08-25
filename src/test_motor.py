@@ -9,3 +9,10 @@ lmotor.set_pwm(250)
 # 右侧电机
 rmotor = Motor(gpio_dict['RIGHT_MOTOR_A'], gpio_dict['RIGHT_MOTOR_B'])
 rmotor.set_pwm(250)
+
+try:
+    while True:
+        pass
+except:
+    del(lmotor)
+    del(rmotor)

@@ -28,3 +28,6 @@ class UserButton(object):
             if self.callback is not None:
                 # 执行回调函数
                 self.callback(self.pin)
+
+    def __del__(self):
+        self.pin.irq(trigger=0, handler=None)

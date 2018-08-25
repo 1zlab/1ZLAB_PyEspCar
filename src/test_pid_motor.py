@@ -55,4 +55,13 @@ timer.init(period=100, mode=Timer.PERIODIC, callback=pid_callback)
 
 # 左侧电机正向旋转90度
 left_mac.set_angle(90, is_reset=False)
+# 右侧电机正向旋转90度
 right_mac.set_angle(90, is_reset=False)
+
+try：
+	while True:
+		pass
+except:
+	timer.deinit()
+	del(left_mac)
+	del(right_mac)		

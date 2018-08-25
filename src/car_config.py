@@ -4,10 +4,10 @@
 
 # GPIO字典
 gpio_dict = {
-    "BATTERY_ADC": 36, # 电池ADC采样(SVN) 
+    "BATTERY_ADC": 39, # 电池ADC采样(SVN) 
                        # TODO 我当前使用的测试开发板板载有其他元器件，有影响
                        # 在NodeMCU32S上面单独测试36pin的ADC没有问题
-    "USER_BUTTON": 39, # 用户按键(SVP)
+    "USER_BUTTON": 36, # 用户按键(SVP)
     
     "LEFT_MOTOR_A": 17, # 左侧电机A相
     "LEFT_MOTOR_B": 5, # 左侧电机B相

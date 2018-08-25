@@ -18,3 +18,9 @@ def callback(pin):
 USER_BUTTON = gpio_dict['USER_BUTTON']
 # 创建UserButton对象
 btn = UserButton(USER_BUTTON, callback)
+
+try:
+    while True:
+        pass
+except:
+    del(btn)

@@ -69,11 +69,16 @@ class MotorAngleControl(object):
             self.count = 0
             print("Target: {} RealValue: {} PID Result: {}".format(self.pid.target_value, self.encoder.position, pwm))
             print('PWM: {}'.format(pwm))
-        
+    
+    def __del__(self):
+        del(self.encoder)
+        del(self.motor)
 class MotorSpeedPID(object):
     '''
     电机速度PID控制
     '''
     def __init__(self, motor, encoder):
-        pass
+        self.motor = motor
+        self.encoder = encoder
+
         

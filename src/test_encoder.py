@@ -23,11 +23,16 @@ print('test encoder')
 left_counter = 0
 right_counter = 0
 
-while True:
-  if abs(left_counter-left_encoder.position) > 10:
-    print('Left Angle: {}'.format(left_encoder.position))
-    left_counter = left_encoder.position
-  
-  if abs(right_counter-right_encoder.position) > 10:
-    print('Right Angle: {}'.format(right_encoder.position))
-    right_counter = right_encoder.position
+try:
+  while True:
+    if abs(left_counter-left_encoder.position) > 10:
+      print('Left Angle: {}'.format(left_encoder.position))
+      left_counter = left_encoder.position
+    
+    if abs(right_counter-right_encoder.position) > 10:
+      print('Right Angle: {}'.format(right_encoder.position))
+      right_counter = right_encoder.position
+except:
+  # 释放资源
+  del(left_counter)
+  del(right_counter)

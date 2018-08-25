@@ -62,5 +62,6 @@ class Motor:
             self.enable_pin.value(1)
             self.pwm_pin.duty(1023 + pwm)
 
-    def destroy(self):
+    def __del__(self):
         self.pwm_pin.deinit()
+        del(self.pwm_pin)
