@@ -44,20 +44,7 @@ class Motor:
         '''
         设置小车的速度
         pwm的范围在 250 - 1023之间 自动放缩
-        TODO 先不设定死区 暂且注释掉
         '''
-        # print('set pwm: {}'.format(pwm))
-        '''
-        if abs(pwm) < self.motor_dead_block:
-            # print("Motor Dead Block: {}".format(pwm))
-            # pwm为电机死区
-            # self.pwm = 0
-            # self.stop()
-            
-            # pwm为电机死区
-            pwm = 0
-        '''
-
         if abs(pwm) > 1023:
             # 判断pwm的绝对值是否
             if pwm <  0:
@@ -75,3 +62,5 @@ class Motor:
             self.enable_pin.value(1)
             self.pwm_pin.duty(1023 + pwm)
 
+    def destroy(self):
+        self.pwm_pin.deinit()

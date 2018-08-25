@@ -23,9 +23,13 @@ gpio_dict = {
     
     "UART_LCD_RX": 33, # 串口液晶屏 接收端
     "UART_LCD_TX": 32, # 串口液晶屏 发送端
-
     "UART_USER_RX": 35, # 用户串口接收端
     "UART_USER_TX": 34, # 用户串口 发送端
+
+    "UART1_RX": 33, # 串口1 接收端
+    "UART1_TX": 32, # 串口1 发送端
+    "UART2_RX": 35, # 串口2 接收端
+    "UART2_TX": 34, # 串口2 发送端
     
     "USER_IIC_SCL": 22, # 用户IIC SCL
     "USER_IIC_SDA": 23, # 用户IIC SDA
@@ -34,21 +38,6 @@ gpio_dict = {
     "SERVO_2": 26 # 舵机2
 }
 
-# GPIO字典
-old_gpio_dict = {
-    'BATTERY_ADC': 33,  # 电池ADC采样 这里改成33测试一下（原来是35）
-    'USER_BUTTON': 22,  # 用户按键
-    'LEFT_MOTOR_A': 23, # 左侧电机A相
-    'LEFT_MOTOR_B': 15, # 左侧电机B相
-    'RIGHT_MOTOR_A': 25,    # 右侧电机A相
-    'RIGHT_MOTOR_B': 27,    # 右侧电机B相
-    'LEFT_ENCODER_A': 5,    # 左侧编码器A相
-    'LEFT_ENCODER_B': 18,   # 左侧编码器B相
-    'RIGHT_ENCODER_A': 21,  # 右侧编码器A相
-    'RIGHT_ENCODER_B': 19, # 右侧编码器B相
-    'UART_LCD_RX': 16,  # 串口液晶屏 接收端
-    'UART_LCD_TX': 17   # 串口液晶屏 发送端
-}
 
 # PID控制参数
 pid_param_dict = {

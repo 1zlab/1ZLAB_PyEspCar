@@ -1,7 +1,15 @@
-# from test_motor import *
-# lmotor.stop()
-# rmotor.stop()
+from car_config import gpio_dict
+from motor import Motor
 
-# PWM资源创建了之后，
-# 在另外一个程序里面就不能重新定义（电机就不转了）
-# 是不是需要释放资源
+
+# 左侧电机
+lmotor = Motor(gpio_dict['LEFT_MOTOR_A'], gpio_dict['LEFT_MOTOR_B']) #,motor_install_dir=False)
+lmotor.set_pwm(0)
+lmotor.destroy()
+
+# 右侧电机
+rmotor = Motor(gpio_dict['RIGHT_MOTOR_A'], gpio_dict['RIGHT_MOTOR_B'])
+rmotor.set_pwm(0)
+rmotor.destroy()
+
+from uart_pid_motor_angle_control import *

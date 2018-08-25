@@ -35,3 +35,6 @@ class PID(object):
         # 更新上次的误差
         self.last_bias = self.cur_bias
         return result
+    
+    def __str__(self):
+        return 'Kp={}, Ki={}, Kd={} Target={}'.format(self.kd, self.ki, self.kd, self.target_value)
