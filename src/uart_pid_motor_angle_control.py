@@ -133,3 +133,13 @@ def send_real_value(real_value):
 timer = Timer(4)
 # 设置定时器回调 100ms执行一次
 timer.init(period=100, mode=Timer.PERIODIC, callback=pid_callback)
+
+try:
+    while True:
+        pass
+except:
+    # 关闭UART总线
+    uart.deinit()
+    # 释放编码器与电机资源
+    del(left_mac)
+    del(right_mac)

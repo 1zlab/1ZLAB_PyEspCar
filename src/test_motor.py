@@ -1,6 +1,6 @@
 from car_config import gpio_dict
 from motor import Motor
-
+import time
 
 # 左侧电机
 lmotor = Motor(gpio_dict['LEFT_MOTOR_A'], gpio_dict['LEFT_MOTOR_B']) #,motor_install_dir=False)

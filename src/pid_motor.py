@@ -73,6 +73,7 @@ class MotorAngleControl(object):
     def __del__(self):
         del(self.encoder)
         del(self.motor)
+    
 class MotorSpeedPID(object):
     '''
     电机速度PID控制
