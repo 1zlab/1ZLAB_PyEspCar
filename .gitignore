@@ -111,3 +111,6 @@ Project Logs for PCB_Project
 TestCode/
 doc/踩坑日记.md
 src/.vscode/settings.json
+*.Zip
+hardware/PCB文件/__Previews/PyESPCar_Z1.SchDocPreview
+hardware/PCB文件/__Previews/PyESPCar_Z1.PcbDocPreview
