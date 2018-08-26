@@ -1,12 +1,5 @@
 '''
 测试PID控制电机旋转角度
-
-TODO 可视化调参
-滑动条 调节 ： KP KI KD，串口 + OpenCV
-波形绘制 （串口工具） or PyQT 开发上位机
-TODO 录制PID的课程
-TODO PID自动调参，
-设定标准，自动优化（+机器学习）
 '''
 from machine import Timer,Pin
 from pid_motor import MotorAngleControl

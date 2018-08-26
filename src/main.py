@@ -1,3 +1,6 @@
+'''
+程序入口
+'''
 from car_config import gpio_dict
 from motor import Motor
 

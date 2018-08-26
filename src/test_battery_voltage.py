@@ -1,3 +1,6 @@
+'''
+测量电池电压
+'''
 from car_config import gpio_dict
 from battery_voltage import BatteryVoltage
 from machine import Timer

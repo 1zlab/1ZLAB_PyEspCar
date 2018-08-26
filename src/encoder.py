@@ -1,4 +1,6 @@
-
+'''
+AB相正交编码器类
+'''
 from machine import Pin
 
 class Encoder(object):

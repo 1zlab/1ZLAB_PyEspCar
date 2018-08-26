@@ -4,7 +4,6 @@
 功能描述：
 * 设置两个电机的转速（速度采样）
 * 设置两个电机的旋转角度/圈数
-
 '''
 class Car(object):
     def __init__(self, battery_adc, user_button, 

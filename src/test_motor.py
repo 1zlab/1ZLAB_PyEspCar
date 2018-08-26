@@ -1,3 +1,8 @@
+'''
+电机测试
+-----------------
+左右轮设定特定的转速
+'''
 from car_config import gpio_dict
 from motor import Motor
 import time

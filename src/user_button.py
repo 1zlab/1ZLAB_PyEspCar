@@ -1,3 +1,6 @@
+'''
+用户按键
+'''
 from machine import Pin
 import utime
 

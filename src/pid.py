@@ -1,3 +1,6 @@
+'''
+PID类
+'''
 import micropython
 # 分配报错缓存区
 micropython.alloc_emergency_exception_buf(100)
