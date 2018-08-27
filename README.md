@@ -143,7 +143,7 @@ ESP32的小车底板正在研发中。 这款小车最后项目预期是可以�
 
 **特别感谢魏延峰同学在机械结构设计还有小车控制板设计做出的贡献。**
 
-* [魏彦峰-1Z实验室&中国地质大学](https://github.com/rose-w)
+* [魏彦峰-1Z实验室&中国地质大学（武汉）](https://github.com/rose-w)
 * [邢顺凯-1Z实验室&杭州电子科技大学](https://github.com/mushroom-x)
 * [吴彬聪-1Z实验室&杭州电子科技大学](https://github.com/littleoniononion)
 * [刘新宇-廊坊师范](https://github.com/LiuXinyu12378)
