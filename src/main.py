@@ -1,5 +1,7 @@
 '''
 程序入口
+
+注：目前各个子功能还在开发中，暂时还没有合并在一起。
 '''
 from car_config import gpio_dict
 from motor import Motor
@@ -22,5 +24,6 @@ def init_motor():
 
 # 初始化电机
 init_motor()
+
 # 设定程序执行入口
 # exec(open('uart_pid_motor_angle_control.py').read(), globals())
