@@ -89,11 +89,23 @@ GenerateClassCluster=0
 DocumentUniqueId=SCSFWMJT
 
 [GeneratedDocument1]
-DocumentPath=Project Outputs for PyESPCar_Z1\PyESPCar_Z1.BOM
+DocumentPath=Project Outputs for PyESPCar_Z1\Board Information - PyESPCar_Z1.html
 DItemRevisionGUID=
 
 [GeneratedDocument2]
+DocumentPath=Project Outputs for PyESPCar_Z1\PyESPCar_Z1.BOM
+DItemRevisionGUID=
+
+[GeneratedDocument3]
 DocumentPath=Project Outputs for PyESPCar_Z1\PyESPCar_Z1.CSV
+DItemRevisionGUID=
+
+[GeneratedDocument4]
+DocumentPath=D:\Desktop\PyESPCar_Z1.xlsx
+DItemRevisionGUID=
+
+[GeneratedDocument5]
+DocumentPath=Project Outputs for PyESPCar_Z1\PyESPCar_Z1.xlsx
 DItemRevisionGUID=
 
 [Configuration1]
@@ -415,17 +427,17 @@ Configuration1_Item1=CaptionAsName
 Configuration1_Name2=Filter
 Configuration1_Item2=545046300E5446696C74657257726170706572000D46696C7465722E416374697665090F46696C7465722E43726974657269610A04000000000000000000
 Configuration1_Name3=General
-Configuration1_Item3=OpenExported=False|AddToProject=False|ForceFit=False|NotFitted=False|Database=False|DatabasePriority=False|IncludePCBData=False|IncludeVaultData=True|IncludeAlternatives=False|ShowExportOptions=True|TemplateFilename=|BatchMode=5|FormWidth=950|FormHeight=661|SupplierProdQty=1|SupplierAutoQty=False|SupplierUseCachedPricing=False|SupplierCurrency=<none>
+Configuration1_Item3=OpenExported=False|AddToProject=True|ForceFit=False|NotFitted=False|Database=False|DatabasePriority=False|IncludePCBData=True|IncludeVaultData=True|IncludeAlternatives=False|ShowExportOptions=True|TemplateFilename=|BatchMode=5|FormWidth=950|FormHeight=661|SupplierProdQty=1|SupplierAutoQty=False|SupplierUseCachedPricing=False|SupplierCurrency=<none>
 Configuration1_Name4=GroupOrder
 Configuration1_Item4=Comment=True|Footprint=True
 Configuration1_Name5=OutputConfigurationParameter1
 Configuration1_Item5==SimpleBOMView|SimpleBOMMode=0
 Configuration1_Name6=PCBDocument
-Configuration1_Item6=FileName=PyESPCar_Z1.PcbDoc
+Configuration1_Item6=
 Configuration1_Name7=PCBDocument2
-Configuration1_Item7=FileName=[PCB Document 1]
+Configuration1_Item7=
 Configuration1_Name8=SortOrder
-Configuration1_Item8=Designator=Up|Comment=Up|Footprint=Up
+Configuration1_Item8=Comment=Up
 Configuration1_Name9=VisibleOrder
 Configuration1_Item9=Comment=100|Description=100|Designator=100|Footprint=100|LibRef=100|Quantity=100
 OutputType2=ComponentCrossReference
