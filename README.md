@@ -7,9 +7,15 @@
 
 
 
-![PyESPCar Z1](./image/car-carton.jpg)
 
-> 小车正在投产中，预计9月1号交付第一批PyEspCar Z1
+
+![image](./image/0831_3.png)
+
+
+
+
+
+> 小车正在投产中，预计9月5号交付第一批PyEspCar Z1
 >
 > 购买小车联系 1Z实验室阿凯  
 > QQ： 244561792
@@ -63,7 +69,9 @@ ESP32的小车底板正在研发中。 这款小车最后项目预期是可以�
 
 * **自主设计ESP32小车底板** 
 
-  ![board](./image/boards.jpg)
+  ![board](./image/0831_1.jpg)
+
+  
 
   填补了目前ESP32小车底板的空白，主控采用安信可公司的NodeMCU32s，直插在小车底板上。
 
@@ -89,8 +97,18 @@ ESP32的小车底板正在研发中。 这款小车最后项目预期是可以�
 
 
 
+
+
+物料成本列表见： [PyESPCar配件清单+物料成本核算-V2](https://github.com/1zlab/1ZLAB_PyEspCar/blob/master/hardware/PyESPCar-Z1-%E9%85%8D%E4%BB%B6%E6%B8%85%E5%8D%95%2B%E7%89%A9%E6%96%99%E6%88%90%E6%9C%AC%E6%A0%B8%E7%AE%97.md)
+
 ## MicroPython-ESP32教学计划
+
+![esp32-tutorial](https://camo.githubusercontent.com/7c28903745e4a0b4d6e4b8aec2146b59afdeb151/687474703a2f2f696d672e317a6c61622e636f6d2f686f6d65706167652d6d6963726f707974686f6e2d65737033322e706e67)
+
+[MicroPython-ESP32基础入门-1Z实验室出品](https://github.com/1zlab/1ZLAB_MicroPython_ESP32_Tutorial)
+
 结合小车讲解单片机基础，用MicroPython来控制单片机。
+
 学会如何控制小车的同时，也完成了单片机入门。另外，因为ESP32开发板自带蓝牙与WIFI，所以ESP32开发板也可以进行物联网IOT的开发。
 
 | 组件         | 相关知识点                                                   |
@@ -137,7 +155,6 @@ ESP32的小车底板正在研发中。 这款小车最后项目预期是可以�
 1. 小车色块追踪， 追着特定颜色的小球跑。
 2. 小车巡线，讲解滤波算法 
 3. 增强现实码ArucoTag追踪 
-4. 。。。
 
 
 
