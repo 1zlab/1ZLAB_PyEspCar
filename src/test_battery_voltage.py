@@ -15,4 +15,7 @@ try:
     while True:
         pass
 except:
+    # 释放定时器资源
     timer.deinit()
+    # 释放ADC资源
+    bv.deinit()

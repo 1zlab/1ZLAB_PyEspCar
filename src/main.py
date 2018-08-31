@@ -15,12 +15,12 @@ def init_motor():
     # 左侧电机的速度设定为0
     lmotor.set_pwm(0)
     # 释放PWM资源
-    del(lmotor)
+    lmotor.deinit()
 
     # 右侧电机
     rmotor = Motor(gpio_dict['RIGHT_MOTOR_A'], gpio_dict['RIGHT_MOTOR_B'])
     rmotor.set_pwm(0)
-    del(rmotor)
+    rmotor.deinit()
 
 # 初始化电机
 init_motor()

@@ -36,5 +36,5 @@ try:
       right_counter = right_encoder.position
 except:
   # 释放资源
-  del(left_counter)
-  del(right_counter)
+  left_encoder.deinit()
+  right_encoder.deinit()

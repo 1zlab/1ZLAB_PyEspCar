@@ -31,7 +31,10 @@ class Encoder(object):
         self._pos = value // self.scale
         
     
-    def __del__(self):
+    def deinit(self):
+        '''
+        资源释放
+        '''
         # 注销引脚的IRQ
         self.pin_x.irq(trigger=0, handler=None)
         self.pin_y.irq(trigger=0, handler=None)

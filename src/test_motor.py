@@ -19,5 +19,5 @@ try:
     while True:
         pass
 except:
-    del(lmotor)
-    del(rmotor)
+    lmotor.deinit()
+    rmotor.deinit()
