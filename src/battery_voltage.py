@@ -82,3 +82,10 @@ class BatteryVoltage(object):
         @scalar scalar为放缩因子，取决与电路电阻分压
         '''
         return value / 1024 * 3.3 * scaler
+
+    def deinit(self):
+        '''
+        释放资源
+        '''
+        # 释放ADC资源
+        self.adc.deinit()

@@ -135,6 +135,9 @@ try:
 except:
     # 关闭UART总线
     uart.deinit()
+    # 释放定时器
+    timer.deinit()
+
     # 释放编码器与电机资源
-    del(left_mac)
-    del(right_mac)
+    left_mac.deinit()
+    right_mac.deinit()

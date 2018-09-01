@@ -56,5 +56,5 @@ try：
 		pass
 except:
 	timer.deinit()
-	del(left_mac)
-	del(right_mac)		
+	left_mac.deinit()
+	right_mac.deinit()

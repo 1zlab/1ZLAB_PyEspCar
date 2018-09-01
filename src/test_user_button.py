@@ -26,4 +26,4 @@ try:
     while True:
         pass
 except:
-    del(btn)
+    btn.deinit()

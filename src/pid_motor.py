@@ -70,9 +70,9 @@ class MotorAngleControl(object):
             print("Target: {} RealValue: {} PID Result: {}".format(self.pid.target_value, self.encoder.position, pwm))
             print('PWM: {}'.format(pwm))
     
-    def __del__(self):
-        del(self.encoder)
-        del(self.motor)
+    def deinit(self):
+        self.encoder.deinit()
+        self.motor.deinit()
     
 class MotorSpeedPID(object):
     '''
