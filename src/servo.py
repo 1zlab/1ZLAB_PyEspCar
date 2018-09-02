@@ -6,7 +6,6 @@
     270度舵机  duty范围 24 - 130 中间duty：77
 云台上臂舵机: 
     180度舵机  duty范围 30 - 130 中间duty：80
-
 '''
 from machine import Pin,PWM
 class Servo:
@@ -42,13 +41,3 @@ class Servo:
         '''
         self.pwm.deinit()
 
-
-if __name__ == "__main__":
-    # 添加测试
-    from machine import Pin
-
-
-    # 270度舵机  duty范围 24 - 130 中间：77
-    servo_down = Servo(Pin(25,Pin.OUT), angle_range=270, min_duty=24, max_duty=130, default_angle=135)
-    # 180度舵机  duty范围 30 - 130 中间：80 
-    # servo_top = 
