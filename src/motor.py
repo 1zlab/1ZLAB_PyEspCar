@@ -5,7 +5,7 @@
 备注2：电机死区 ：-250 - 250， pwm信号在这个范围是不转的
 '''
 from machine import Pin,PWM
-
+from car_config import car_property
 class Motor:
     def __init__(self, gpio_a, gpio_b, motor_install_dir=True, motor_dead_block=250, pwm=0):
         
@@ -20,11 +20,11 @@ class Motor:
         if motor_install_dir:
             # 电机正向安装
             self.enable_pin = self.pin_a      
-            self.pwm_pin = PWM(self.pin_b, freq=1000)
+            self.pwm_pin = PWM(self.pin_b, freq=car_property['PWM_FREQUENCY'])
         else:
             # 电机反向安装
             self.enable_pin = self.pin_b    
-            self.pwm_pin = PWM(self.pin_a, freq=1000)
+            self.pwm_pin = PWM(self.pin_a, freq=car_property['PWM_FREQUENCY'])
             
 
         self.motor_dead_block =  motor_dead_block

@@ -20,7 +20,7 @@ micropython.alloc_emergency_exception_buf(100)
 
 
 # 左侧电机
-left_motor = Motor(gpio_dict['LEFT_MOTOR_A'], gpio_dict['LEFT_MOTOR_B']) #,motor_install_dir=False)
+left_motor = Motor(gpio_dict['LEFT_MOTOR_A'], gpio_dict['LEFT_MOTOR_B'], motor_install_dir=False)
 left_motor.stop()
 # 右侧电机
 right_motor = Motor(gpio_dict['RIGHT_MOTOR_A'], gpio_dict['RIGHT_MOTOR_B'])
@@ -30,13 +30,13 @@ right_motor.stop()
 left_pin_a = Pin(gpio_dict['LEFT_ENCODER_A'], Pin.IN)
 left_pin_b = Pin(gpio_dict['LEFT_ENCODER_B'], Pin.IN)
 # 左侧编码器
-left_encoder = Encoder(left_pin_a, left_pin_b, reverse=1, scale=0.247)
+left_encoder = Encoder(left_pin_a, left_pin_b, reverse=0, scale=0.247)
 
 # 右侧编码器管脚
 right_pin_a = Pin(gpio_dict['RIGHT_ENCODER_A'], Pin.IN)
 right_pin_b = Pin(gpio_dict['RIGHT_ENCODER_B'], Pin.IN)
 # 右侧编码器
-right_encoder = Encoder(right_pin_a, right_pin_b, reverse=0, scale=0.247)
+right_encoder = Encoder(right_pin_a, right_pin_b, reverse=1, scale=0.247)
 
 # PID参数
 # kp = pid_param_dict['MOTOR_ANGLE_CTL_KP']
@@ -49,9 +49,11 @@ kd = 0
 # 电机角度PID控制
 left_mac = MotorAngleControl(left_motor, left_encoder,
 		kp=kp, ki=ki, kd=kd, is_debug=False)
+left_mac.pid.max_bias_sum = 45
 
 right_mac = MotorAngleControl(right_motor, right_encoder,
 		kp=kp, ki=ki, kd=kd, is_debug=False)
+right_mac.pid.max_bias_sum = 45
 
 def pid_callback(timer):
     global left_mac
@@ -60,10 +62,9 @@ def pid_callback(timer):
     right_mac.callback(timer)
     send_real_value(right_mac.encoder.position)
     # left_mac.callback(timer)
-    # # 串口发送当前电机的角度
+    # 串口发送当前电机的角度
     # send_real_value(left_mac.encoder.position)
-    # right_mac.callback(timer)
-
+    
     if uart.any():
         data_byte = uart.readline()
         data_str = data_byte.decode('utf-8')

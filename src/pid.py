@@ -10,7 +10,7 @@ class PID(object):
     '''
     PID控制类
     '''
-    def __init__(self, kp, ki=0, kd=0, target_value=0):
+    def __init__(self, kp, ki=0, kd=0, target_value=0, max_bias_sum=None):
         self.kp = kp # 比例系数
         self.ki = ki # 积分系数
         self.kd = kd # 微分系数
@@ -18,7 +18,11 @@ class PID(object):
         self.cur_bias = 0  # 最近一次的误差 err_k 
         self.last_bias = 0  # 上一次的误差 err_k-1
         self.bias_sum = 0   # 累积误差
-    
+        self.max_bias_sum = None # 累计误差上限
+        if max_bias_sum is not None:
+            # 累积误差上限
+            self.max_bias_sum = max_bias_sum
+        
     def set_target_value(self, target_value):
         '''
         设置目标值
@@ -33,6 +37,13 @@ class PID(object):
         self.cur_bias = real_value - self.target_value
         # 更新偏差的积分
         self.bias_sum += self.cur_bias
+        # 限制累积误差的范围
+        if self.max_bias_sum is not None:
+            if self.bias_sum < -1 * self.max_bias_sum:
+                self.bias_sum = -1 * self.max_bias_sum
+            elif self.bias_sum > self.max_bias_sum:
+                self.bias_sum = self.max_bias_sum
+            
         # 获取PID的控制结果
         result = self.kp*self.cur_bias + self.ki*self.bias_sum + self.kd*(self.cur_bias-self.last_bias)
         # 更新上次的误差

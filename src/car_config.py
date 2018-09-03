@@ -1,6 +1,17 @@
 '''
 小车的配置文件
 '''
+# 小车属性
+car_property = {
+    'CAR_WIDTH': 0.17667, # 小车的后轮轮距离，单位m
+    'CAR_LENGTH': 0.15300, # 小车前后轮轮距，单位m
+    'WHEEL_RADIUS': 0.0325, # 轮胎半径，单位m
+    'CAR_CTL_MODE' :{ # 小车控制模式
+        'SPEED': 1, # 速度控制
+        'POSITION': 2, # 位置控制
+        },
+    'PWM_FREQUENCY': 50, # 电机控制与舵机控制的PWM
+}
 
 # GPIO字典
 gpio_dict = {
@@ -10,7 +21,7 @@ gpio_dict = {
     "USER_BUTTON": 36, # 用户按键(SVP)
     
     "LEFT_MOTOR_A": 17, # 左侧电机A相
-    "LEFT_MOTOR_B": 5, # 左侧电机B相
+    "LEFT_MOTOR_B": 5, # 左侧电机B相 5->2
     
     "RIGHT_MOTOR_A": 18, # 右侧电机A相
     "RIGHT_MOTOR_B": 19, # 右侧电机B相
@@ -41,7 +52,7 @@ gpio_dict = {
 
 # PID控制参数
 pid_param_dict = {
-    'MOTOR_ANGLE_CTL_KP': -9,
-    'MOTOR_ANGLE_CTL_KI': -0.3,
-    'MOTOR_ANGLE_CTL_KD': -4
+    'MOTOR_ANGLE_CTL_KP': -1.99,
+    'MOTOR_ANGLE_CTL_KI': -0.31,
+    'MOTOR_ANGLE_CTL_KD': -2.07
 }
