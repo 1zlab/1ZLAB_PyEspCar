@@ -5,6 +5,7 @@
 '''
 from car_config import gpio_dict
 from motor import Motor
+
 import webrepl
 
 def init_motor():
@@ -73,4 +74,25 @@ if __name__ == '__main__':
     webrepl.start()
 
 # 设定程序执行入口
+
+# 测试电机旋转
+# exec(open('test_motor.py').read(), globals())
+
+# 测试编码器
+# exec(open('test_encoder.py').read(), globals())
+
+# 串口PID控制电机旋转角度
 # exec(open('uart_pid_motor_angle_control.py').read(), globals())
+
+# 测试电机角度控制
+# exec(open('test_pid_motor.py').read(), globals())
+
+# exec(open('test_car.py').read(), globals())
+# 小车前进1m
+# car.move(1)
+
+# 测试电机转速PID控制
+# exec(open('test_motor_speed_pid.py').read(), globals())
+
+# 测试串口调节电机转速
+exec(open('uart_speed_pid_control.py').read(), globals())

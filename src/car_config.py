@@ -6,11 +6,32 @@ car_property = {
     'CAR_WIDTH': 0.17667, # 小车的后轮轮距离，单位m
     'CAR_LENGTH': 0.15300, # 小车前后轮轮距，单位m
     'WHEEL_RADIUS': 0.0325, # 轮胎半径，单位m
+
     'CAR_CTL_MODE' :{ # 小车控制模式
         'SPEED': 1, # 速度控制
         'POSITION': 2, # 位置控制
         },
     'PWM_FREQUENCY': 50, # 电机控制与舵机控制的PWM
+
+    'LEFT_MOTOR_INSTALL_DIR': False, # 左侧电机的安装方向
+    'LEFT_ENCODER_IS_REVERSE': False, # 左侧编码器是否为反
+    'LEFT_ENCODER_ANGLE_SCALE': 0.247, # 编码器计数与旋转角度之间的缩放因子
+    'LEFT_MOTOR_ANGLE_CTL_KP': -1.99, # 左侧电机角度控制的PID参数
+    'LEFT_MOTOR_ANGLE_CTL_KI': -0.31,
+    'LEFT_MOTOR_ANGLE_CTL_KD': -2.07,
+    'LEFT_MOTOR_SPEED_CTL_KP': -7.56, # 左侧电机速度控制的PID参数
+    'LEFT_MOTOR_SPEED_CTL_KI': -1.07,
+    'LEFT_MOTOR_SPEED_CTL_KD': -0.43,
+
+    'RIGHT_MOTOR_INSTALL_DIR': True, # 右侧电机的安装方向
+    'RIGHT_ENCODER_IS_REVERSE': True, # 右侧编码器是否为反
+    'RIGHT_ENCOER_ANGLE_SCALE': 0.247, # 编码器计数与旋转角度之间的缩放因子
+    'RIGHT_MOTOR_ANGLE_CTL_KP': -1.99, # 右侧电机角度控制的PID参数
+    'RIGHT_MOTOR_ANGLE_CTL_KI': -0.31,
+    'RIGHT_MOTOR_ANGLE_CTL_KD': -2.07,
+    'RIGHT_MOTOR_SPEED_CTL_KP': -7.56, # 左侧电机速度控制的PID参数
+    'RIGHT_MOTOR_SPEED_CTL_KI': -1.07,
+    'RIGHT_MOTOR_SPEED_CTL_KD': -0.43,
 }
 
 # GPIO字典

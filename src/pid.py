@@ -10,7 +10,7 @@ class PID(object):
     '''
     PID控制类
     '''
-    def __init__(self, kp, ki=0, kd=0, target_value=0, max_bias_sum=None):
+    def __init__(self, kp, ki=0, kd=0, target_value=0, max_bias_sum=None, max_bias_win=None):
         self.kp = kp # 比例系数
         self.ki = ki # 积分系数
         self.kd = kd # 微分系数
@@ -18,10 +18,11 @@ class PID(object):
         self.cur_bias = 0  # 最近一次的误差 err_k 
         self.last_bias = 0  # 上一次的误差 err_k-1
         self.bias_sum = 0   # 累积误差
-        self.max_bias_sum = None # 累计误差上限
-        if max_bias_sum is not None:
-            # 累积误差上限
-            self.max_bias_sum = max_bias_sum
+
+        self.error_list = [] # 误差列表
+        self.max_bias_win = max_bias_win # 最长的误差的窗口
+        # 累积误差上限
+        self.max_bias_sum = max_bias_sum
         
     def set_target_value(self, target_value):
         '''
@@ -35,8 +36,15 @@ class PID(object):
         '''
         # 计算偏差
         self.cur_bias = real_value - self.target_value
+        
+        if self.max_bias_win is not None:
+            self.error_list.append(self.cur_bias)
+            if len(self.error_list) > self.max_bias_win:
+                old_err = self.error_list.pop(0) # 弹出队尾元素
+                self.bias_sum -= old_err # 减去旧的error
         # 更新偏差的积分
         self.bias_sum += self.cur_bias
+        
         # 限制累积误差的范围
         if self.max_bias_sum is not None:
             if self.bias_sum < -1 * self.max_bias_sum:

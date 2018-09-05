@@ -7,7 +7,6 @@
 from machine import Timer,Pin,UART
 import micropython
 from car_config import gpio_dict
-import struct
 import utime
 from pid_motor import MotorAngleControl
 from motor import Motor
@@ -25,8 +24,8 @@ left_motor.stop()
 # 右侧电机
 right_motor = Motor(gpio_dict['RIGHT_MOTOR_A'], gpio_dict['RIGHT_MOTOR_B'])
 right_motor.stop()
-# 左侧编码器管脚
 
+# 左侧编码器管脚
 left_pin_a = Pin(gpio_dict['LEFT_ENCODER_A'], Pin.IN)
 left_pin_b = Pin(gpio_dict['LEFT_ENCODER_B'], Pin.IN)
 # 左侧编码器

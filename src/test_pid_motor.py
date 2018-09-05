@@ -8,7 +8,7 @@ from encoder import Encoder
 from car_config import gpio_dict, pid_param_dict
 
 # 左侧电机
-left_motor = Motor(gpio_dict['LEFT_MOTOR_A'], gpio_dict['LEFT_MOTOR_B']) #,motor_install_dir=False)
+left_motor = Motor(gpio_dict['LEFT_MOTOR_A'], gpio_dict['LEFT_MOTOR_B']), motor_install_dir=False)
 left_motor.stop()
 # 右侧电机
 right_motor = Motor(gpio_dict['RIGHT_MOTOR_A'], gpio_dict['RIGHT_MOTOR_B'])
@@ -18,13 +18,13 @@ right_motor.stop()
 left_pin_a = Pin(gpio_dict['LEFT_ENCODER_A'], Pin.IN)
 left_pin_b = Pin(gpio_dict['LEFT_ENCODER_B'], Pin.IN)
 # 左侧编码器
-left_encoder = Encoder(left_pin_a, left_pin_b, reverse=1, scale=0.247)
+left_encoder = Encoder(left_pin_a, left_pin_b, reverse=0, scale=0.247)
 
 # 右侧编码器管脚
 right_pin_a = Pin(gpio_dict['RIGHT_ENCODER_A'], Pin.IN)
 right_pin_b = Pin(gpio_dict['RIGHT_ENCODER_B'], Pin.IN)
 # 右侧编码器
-right_encoder = Encoder(right_pin_a, right_pin_b, reverse=0, scale=0.247)
+right_encoder = Encoder(right_pin_a, right_pin_b, reverse=1, scale=0.247)
 
 # PID参数
 kp = pid_param_dict['MOTOR_ANGLE_CTL_KP']
@@ -51,7 +51,7 @@ left_mac.set_angle(90, is_reset=False)
 # 右侧电机正向旋转90度
 right_mac.set_angle(90, is_reset=False)
 
-try：
+try:
 	while True:
 		pass
 except:

@@ -34,10 +34,12 @@ ki = pid_param_dict['MOTOR_ANGLE_CTL_KI']
 kd = pid_param_dict['MOTOR_ANGLE_CTL_KD']
 
 # 电机角度PID控制
+# 设置对大积分上限
 left_mac = MotorAngleControl(left_motor, left_encoder,
-		kp=kp, ki=ki, kd=kd, is_debug=False)
+		kp=kp, ki=ki, kd=kd, max_bias_sum=45, is_debug=False)
+
 right_mac = MotorAngleControl(right_motor, right_encoder,
-		kp=kp, ki=ki, kd=kd, is_debug=False)
+		kp=kp, ki=ki, kd=kd, max_bias_sum=45, is_debug=False)
 
 car = Car(left_mac, right_mac)
 
