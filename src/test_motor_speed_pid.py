@@ -14,7 +14,7 @@ from car_config import gpio_dict, car_property
 from user_button import UserButton
 from motor import Motor
 from encoder import Encoder
-from pid_motor import MotorSpeedPID
+from pid_motor import MotorSpeedControl
 
 
 # 设定紧急意外缓冲区的大小为100
@@ -37,7 +37,7 @@ kp = car_property['LEFT_MOTOR_SPEED_CTL_KP']
 ki = car_property['LEFT_MOTOR_SPEED_CTL_KI']
 kd = car_property['LEFT_MOTOR_SPEED_CTL_KD']
 
-left_speed_pid = MotorSpeedPID(left_motor, left_encoder, 
+left_speed_pid = MotorSpeedControl(left_motor, left_encoder, 
         kp = kp, ki = ki, kd = kd,
         is_debug=False)
 

@@ -3,6 +3,7 @@
 '''
 from machine import Timer
 from pid import PID
+from car_config import car_property
 
 class MotorAngleControl(object):
     '''
@@ -11,7 +12,7 @@ class MotorAngleControl(object):
     使用PID，结合编码器提供的反馈
     每隔100ms采样一次
     '''
-    def __init__(self, motor, encoder, kp, ki=0, kd=0, is_debug=False, max_bias_sum=None):
+    def __init__(self, motor, encoder, kp, ki=0, kd=0, max_bias_sum=None, is_debug=False):
         # 电机对象
         self.motor = motor
         # 编码器
@@ -79,11 +80,7 @@ class MotorAngleControl(object):
         self.encoder.deinit()
         self.motor.deinit()
 
-
-'''
-MotorAngleControl 可以通过MotorAngleControl实现， 这里有点冗余
-'''
-class MotorSpeedPID(object):
+class MotorSpeedControl(object):
     '''电机速度PID控制'''
     def __init__(self, motor, encoder, kp, ki=0, kd=0, is_debug=False, max_bias_sum=None):
         self.motor = motor # 电机
@@ -104,7 +101,10 @@ class MotorSpeedPID(object):
         if target_speed is None:
             # 返回当前的速度
             return self._speed
-    
+        # 规约target ,计算控制周期内电机最大的target
+        max_target = int(car_property['CAR_MAX_SPEED']*car_property['PID_CTL_PERIOD'])
+        if abs(target_speed) > max_target:
+            target_speed = max_target if target_speed > 0 else -1 * max_target 
         # 设置pid目标值
         self.pid.set_target_value(target_speed) 
 

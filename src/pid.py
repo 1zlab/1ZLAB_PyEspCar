@@ -59,4 +59,5 @@ class PID(object):
         return result
     
     def __str__(self):
-        return 'Kp={}, Ki={}, Kd={} Target={}'.format(self.kd, self.ki, self.kd, self.target_value)
+        
+        return 'Kp={}, Ki={}, Kd={} Target={}'.format(self.kp, self.ki, self.kd, self.target_value)

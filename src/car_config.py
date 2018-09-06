@@ -11,27 +11,36 @@ car_property = {
         'SPEED': 1, # 速度控制
         'POSITION': 2, # 位置控制
         },
-    'PWM_FREQUENCY': 50, # 电机控制与舵机控制的PWM
-
+    'PWM_FREQUENCY': 1000, # 电机控制与舵机控制的PWM
+                            # 推荐频率 500Hz - 30000HZ
+    'PID_CTL_PERIOD': 0.025, # PID控制周期 单位s
+    'CAR_MAX_SPEED': 5.89, # 小车的最大直线速度, m/s
+    'MOTOR_MAX_ANGLE': 2600, # 25ms内,电机最多转65度 1s -> 65 * 40
     'LEFT_MOTOR_INSTALL_DIR': False, # 左侧电机的安装方向
     'LEFT_ENCODER_IS_REVERSE': False, # 左侧编码器是否为反
     'LEFT_ENCODER_ANGLE_SCALE': 0.247, # 编码器计数与旋转角度之间的缩放因子
-    'LEFT_MOTOR_ANGLE_CTL_KP': -1.99, # 左侧电机角度控制的PID参数
-    'LEFT_MOTOR_ANGLE_CTL_KI': -0.31,
-    'LEFT_MOTOR_ANGLE_CTL_KD': -2.07,
-    'LEFT_MOTOR_SPEED_CTL_KP': -7.56, # 左侧电机速度控制的PID参数
-    'LEFT_MOTOR_SPEED_CTL_KI': -1.07,
-    'LEFT_MOTOR_SPEED_CTL_KD': -0.43,
-
+    'LEFT_MOTOR_ANGLE_CTL_KP': -8.01, # 左侧电机角度控制的PID参数
+    'LEFT_MOTOR_ANGLE_CTL_KI': -0.21,
+    'LEFT_MOTOR_ANGLE_CTL_KD': -20.00,
+    'LEFT_MOTOR_ANGLE_CTL_MAX_BIAS_SUM': 1000, # 积分上限
+    'LEFT_MOTOR_SPEED_CTL_KP': -30.00, # 左侧电机速度控制的PID参数
+    'LEFT_MOTOR_SPEED_CTL_KI': -0.51,
+    'LEFT_MOTOR_SPEED_CTL_KD': -0.00,
+    'LEFT_MOTOR_SPEED_CTL_MAX_BIAS_SUM': 1000, # 积分上限
+    
     'RIGHT_MOTOR_INSTALL_DIR': True, # 右侧电机的安装方向
     'RIGHT_ENCODER_IS_REVERSE': True, # 右侧编码器是否为反
-    'RIGHT_ENCOER_ANGLE_SCALE': 0.247, # 编码器计数与旋转角度之间的缩放因子
-    'RIGHT_MOTOR_ANGLE_CTL_KP': -1.99, # 右侧电机角度控制的PID参数
-    'RIGHT_MOTOR_ANGLE_CTL_KI': -0.31,
-    'RIGHT_MOTOR_ANGLE_CTL_KD': -2.07,
-    'RIGHT_MOTOR_SPEED_CTL_KP': -7.56, # 左侧电机速度控制的PID参数
-    'RIGHT_MOTOR_SPEED_CTL_KI': -1.07,
-    'RIGHT_MOTOR_SPEED_CTL_KD': -0.43,
+    'RIGHT_ENCODER_ANGLE_SCALE': 0.247, # 编码器计数与旋转角度之间的缩放因子
+    'RIGHT_MOTOR_ANGLE_CTL_KP': -8.01, # 右侧电机角度控制的PID参数
+    'RIGHT_MOTOR_ANGLE_CTL_KI': -0.21,
+    'RIGHT_MOTOR_ANGLE_CTL_KD': -20.00,
+    'RIGHT_MOTOR_ANGLE_CTL_MAX_BIAS_SUM': 1000, # 积分上限
+    'RIGHT_MOTOR_SPEED_CTL_KP': -30.00, # 左侧电机速度控制的PID参数
+    'RIGHT_MOTOR_SPEED_CTL_KI': -0.51,
+    'RIGHT_MOTOR_SPEED_CTL_KD': -0.00,
+    'RIGHT_MOTOR_SPEED_CTL_MAX_BIAS_SUM': 1000, # 设置积分上限
+
+    'CAR_ONE_SHOT_TIMER_ID': 2, # 单次计时器的ID
 }
 
 # GPIO字典
@@ -72,6 +81,7 @@ gpio_dict = {
 
 
 # PID控制参数
+# TODO 已废弃
 pid_param_dict = {
     'MOTOR_ANGLE_CTL_KP': -1.99,
     'MOTOR_ANGLE_CTL_KI': -0.31,
