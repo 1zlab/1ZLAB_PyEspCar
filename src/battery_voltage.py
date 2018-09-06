@@ -86,6 +86,8 @@ class BatteryVoltage(object):
     def deinit(self):
         '''
         释放资源
+        备注 ADC没有deinit方法
         '''
         # 释放ADC资源
-        self.adc.deinit()
+        # self.adc.deinit()
+        pass

@@ -25,6 +25,13 @@ left_motor = Motor(gpio_dict['LEFT_MOTOR_A'], gpio_dict['LEFT_MOTOR_B'],
         motor_install_dir=car_property['LEFT_MOTOR_INSTALL_DIR'])
 left_motor.stop()
 
+# 右侧电机
+right_motor = Motor(
+    gpio_dict['RIGHT_MOTOR_A'], 
+    gpio_dict['RIGHT_MOTOR_B'], 
+    motor_install_dir=car_property['RIGHT_MOTOR_INSTALL_DIR'])
+right_motor.stop()
+
 # 左侧编码器
 left_pin_a = Pin(gpio_dict['LEFT_ENCODER_A'], Pin.IN)
 left_pin_b = Pin(gpio_dict['LEFT_ENCODER_B'], Pin.IN)

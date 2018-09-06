@@ -27,7 +27,13 @@ class MotorAngleControl(object):
         if is_debug:
             # 迭代次数计数
             self._iteration = 0
-        
+    
+    def init(self):
+        self.encoder._pos = 0
+        self.pid.cur_bias = 0
+        self.pid.bias_sum = 0
+        self.pid.set_target_value(0)
+
     def set_angle(self, angle, is_reset=False):
         '''
         设置电机的旋转角度
@@ -93,6 +99,15 @@ class MotorSpeedControl(object):
         
         # if self.is_debug:
         self._iteration = 0 # PID迭代次数
+    def init(self):
+        '''
+        重新初始化
+        '''
+        self.encoder._pos = 0
+        self.pid.bias_sum = 0
+        self.pid.cur_bias = 0
+        self._iteration = 0
+        self.pid.set_target_value(0)
 
     def speed(self, target_speed=None):
         '''
@@ -102,7 +117,7 @@ class MotorSpeedControl(object):
             # 返回当前的速度
             return self._speed
         # 规约target ,计算控制周期内电机最大的target
-        max_target = int(car_property['CAR_MAX_SPEED']*car_property['PID_CTL_PERIOD'])
+        max_target = int(car_property['MOTOR_MAX_ANGLE']*car_property['PID_CTL_PERIOD'])
         if abs(target_speed) > max_target:
             target_speed = max_target if target_speed > 0 else -1 * max_target 
         # 设置pid目标值

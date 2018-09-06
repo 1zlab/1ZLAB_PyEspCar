@@ -15,22 +15,16 @@ API参考ROS的TurtleSim
 4. 小车速度控制 + 角度控制
 
 [存在问题]
-1. 小车有时候会莫名的开始自旋？（PID控制算法的问题，还是管脚的问题？）
-2. 小车不走直线，两个电机速度不统一
-3. move同样的幅度，前进与后退效果不一样，向前距离大一些
-4. move 0.1 0.2 0.5 实际前进距离指数式增加
+
+3. [BUG] move同样的幅度，前进与后退效果不一样，向后距离大一些
+    且后向的前进举例更接近真实值
+4. [BUG] move 0.1 0.2 0.5 实际前进距离指数式增加
     TODO 测试PWM不同取值，对应电机速度
-    ？有可能是速度快到一定程度，编码器的中断就处理不过来了
-5. [DONE]电机在运行过程中抖动的厉害
-    PWM频率问题
-6. 运动学控制 角度超过特定值的时候,定时就不好使了
+    ?电机有一个启动时间
+8. [BUG] 累积误差问题, 前进时间长了,角度偏移就越来越大
+   [TODO] Move或者旋转之后,添加一个位姿修正
 
-
-TODO 限定小车的旋转角度
-TODO 设置角度控制的积分上限
-TODO 切换状态的时候,PID参数清零
-TODO 测试前进1m的效果 move
-
+[TODO] PID速度控制 编码器改成增量式
 '''
 import math
 import utime
@@ -136,7 +130,7 @@ class Car(object):
             kp = car_property['RIGHT_MOTOR_ANGLE_CTL_KP'],
             ki = car_property['RIGHT_MOTOR_ANGLE_CTL_KI'],
             kd = car_property['RIGHT_MOTOR_ANGLE_CTL_KD'],
-            max_bias_sum = car_property['RIGHT_MOTOR_ANGLE_CTL_MAX_BIAS_SUM']
+            max_bias_sum = car_property['RIGHT_MOTOR_ANGLE_CTL_MAX_BIAS_SUM'],
             is_debug = False)
         
         # 小车控制模式 默认状态为角度控制
@@ -198,16 +192,53 @@ class Car(object):
 
         '''
         # 计算前进时间
-        time = int((distance / speed) * 1000)
+        time_ms = int(abs((distance / speed) * 1000))
+        
+        if distance < 0:
+            speed = -1*speed
         # 运动学控制
-        self.kinematic_analysis(speed, 0, time)
+        self.kinematic_analysis(speed, 0, time_ms)
 
-    def rotate(self, angle, max_speed=None):
+    def rotate(self, angle, speed=0.3, scalar=2):
         '''
         小车旋转 角度
-        TODO 设置旋转的最大角速度
+        默认旋转线速度是 0.3m/s
+        
+        旋转的时候,有损耗,需要添加一个比例系数(不准确)
+        TODO
+        45 2.2
+        90 2
+        180 1.8
+        360 1.5
+        720 1.32
         '''
-        pass
+        # 将小车旋转角度转换为电机前进距离
+        distance = (angle / 360) *  math.pi * car_property['CAR_WIDTH'] 
+        # 计算时延
+        time_ms = int(abs(distance / speed) * 1000 * scalar)
+        # 计算每个控制周期内电机的旋转角度
+        motor_speed = self.velocity_to_motor_angle(speed)
+        # 自动切换为速度控制
+        self.car_ctl_mode = car_property['CAR_CTL_MODE']['SPEED']
+        # 初始化
+        self.left_msc.init()
+        self.right_msc.init()
+        
+        # 电机反向旋转
+        if angle > 0:
+            # 小车向右转
+            self.left_msc.speed(1 * motor_speed)
+            self.right_msc.speed(-1 * motor_speed)
+        elif angle < 0:
+            self.right_msc.speed(1 * motor_speed)
+            self.left_msc.speed(-1 * motor_speed)
+        
+        if self.is_debug:
+            print('Rotate Angle: {}, motor_speed:{}, delay_ms: {}'.format(angle, motor_speed, time_ms))
+        # 等待ms
+        utime.sleep_ms(time_ms)
+        # 小车停止
+        self.stop()
     
     def stop(self):
         '''
@@ -219,6 +250,8 @@ class Car(object):
 
         # 自动切换为角度控制
         self.car_ctl_mode = car_property['CAR_CTL_MODE']['POSITION']
+        self.left_mac.init()
+        self.right_mac.init()
         
         if self.is_debug:
             print('Car Stop')
@@ -233,17 +266,19 @@ class Car(object):
         angle = angle / (1 / period)
         return angle
     
-    def kinematic_analysis(self, velocity, angle, time=None):
+    def kinematic_analysis(self, velocity, angle, time_ms=None):
         '''
         运动学控制
-        @velocity: 小车前进的直线速度
-        @theta： 小车的旋转角度
-
-        TODO 对angle target进行规约 限定范围
+        @velocity: 小车前进的直线速度, 单位m/s
+        @angle： 小车的旋转角度, 单位 度
+        @time: 小车的前进时间, 单位ms
         '''
         
         # 自动切换为速度控制
         self.car_ctl_mode = car_property['CAR_CTL_MODE']['SPEED']
+        # 初始化
+        self.left_msc.init()
+        self.right_msc.init()
 
         max_v = car_property['CAR_MAX_SPEED'] # 小车最大线速度
         if abs(velocity) > max_v:
@@ -270,10 +305,14 @@ class Car(object):
             print('Left Motor Speed Control : {}'.format(left_motor_angle_target))
             print('Right Motor Speed Control: {}'.format(right_motor_angle_target))
         
-        if time is not None:
+        if time_ms is not None:
+            print('定时器 等待{} ms'.format(time_ms))
             # 定时器只运行一次
-            self.one_shot_timer.init(period=time, mode=Timer.ONE_SHOT, callback=lambda t:self.stop())
-
+            # TODO 定时器不好使
+            # self.one_shot_timer.init(period=time_ms, mode=Timer.ONE_SHOT, callback=lambda t:self.stop())
+            utime.sleep_ms(time_ms)
+            self.stop()
+            
     def deinit(self):
         '''
         释放资源
