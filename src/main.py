@@ -74,6 +74,8 @@ if __name__ == '__main__':
 
 # 设定程序执行入口
 
+# 测试舵机
+# exec(open('test_servo.py').read(), globals())
 # 测试电机旋转
 # exec(open('test_motor.py').read(), globals())
 
@@ -93,6 +95,6 @@ if __name__ == '__main__':
 # exec(open('test_uart_left_msc.py').read(), globals())
 
 # 测试car
-exec(open('test_car.py').read(), globals())
+# exec(open('test_car.py').read(), globals())
 # 小车前进1m
 # car.move(1)

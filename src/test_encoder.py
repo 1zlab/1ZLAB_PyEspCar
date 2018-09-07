@@ -20,7 +20,7 @@ right_pin_a = Pin(gpio_dict['RIGHT_ENCODER_A'], Pin.IN)
 right_pin_b = Pin(gpio_dict['RIGHT_ENCODER_B'], Pin.IN)
 right_encoder = Encoder(right_pin_a, right_pin_b,
     reverse=car_property['RIGHT_ENCODER_IS_REVERSE'],
-    scale=car_property['RIGHT_ENCOER_ANGLE_SCALE'])
+    scale=car_property['RIGHT_ENCODER_ANGLE_SCALE'])
 
 
 print('test encoder')

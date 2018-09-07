@@ -23,8 +23,11 @@ API参考ROS的TurtleSim
     ?电机有一个启动时间
 8. [BUG] 累积误差问题, 前进时间长了,角度偏移就越来越大
    [TODO] Move或者旋转之后,添加一个位姿修正
-
+[TODO] 电机存在一个启动时间,而且可能是一个轮子先动,在旋转较小角度的时候,这个问题比较明显.
+? 小车旋转角度的反馈信号
 [TODO] PID速度控制 编码器改成增量式
+
+[TODO] 前进距离与实际尺寸不符合
 '''
 import math
 import utime
@@ -169,6 +172,10 @@ class Car(object):
         
         if not self.stop_flag:
             if self.car_ctl_mode == car_property['CAR_CTL_MODE']['SPEED']:
+                # 添加两轮角度校准, 确保走直线
+                self.left_msc.stop_flag = abs(self.left_encoder.position) > abs(self.right_encoder.position)
+                self.right_msc.stop_flag = abs(self.left_encoder.position) < abs(self.right_encoder.position)
+
                 # 进入小车速度控制模式
                 self.left_msc.callback(timer)
                 self.right_msc.callback(timer)
@@ -191,6 +198,7 @@ class Car(object):
         @speed 小车前进速度 m/s
 
         '''
+        
         # 计算前进时间
         time_ms = int(abs((distance / speed) * 1000))
         
@@ -266,7 +274,7 @@ class Car(object):
         angle = angle / (1 / period)
         return angle
     
-    def kinematic_analysis(self, velocity, angle, time_ms=None):
+    def kinematic_analysis(self, velocity, angle, time_ms=None, left_target_posi=None, right_target_posi=None):
         '''
         运动学控制
         @velocity: 小车前进的直线速度, 单位m/s
@@ -298,14 +306,18 @@ class Car(object):
         right_motor_angle_target = self.velocity_to_motor_angle(right_velocity)
         
         # 设定Target值
-        self.left_msc.speed(left_motor_angle_target)
-        self.right_msc.speed(right_motor_angle_target)
+        self.left_msc.speed(left_motor_angle_target, target_posi = left_target_posi)
+        self.right_msc.speed(right_motor_angle_target, target_posi = right_target_posi)
 
         if self.is_debug:
             print('Left Motor Speed Control : {}'.format(left_motor_angle_target))
             print('Right Motor Speed Control: {}'.format(right_motor_angle_target))
-        
+
+              
         if time_ms is not None:
+            '''
+            定时操作
+            '''
             print('定时器 等待{} ms'.format(time_ms))
             # 定时器只运行一次
             # TODO 定时器不好使
@@ -322,4 +334,4 @@ class Car(object):
         # mac 与 msc只需要销毁一次
         self.left_mac.deinit()
         self.right_mac.deinit()
-        self.tmp_timer.deinit()
+        # self.tmp_timer.deinit()

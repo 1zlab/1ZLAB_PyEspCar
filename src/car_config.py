@@ -18,7 +18,7 @@ car_property = {
     'MOTOR_MAX_ANGLE': 2600, # 25ms内,电机最多转65度 1s -> 65 * 40
     'LEFT_MOTOR_INSTALL_DIR': False, # 左侧电机的安装方向
     'LEFT_ENCODER_IS_REVERSE': False, # 左侧编码器是否为反
-    'LEFT_ENCODER_ANGLE_SCALE': 0.240, # 编码器计数与旋转角度之间的缩放因子
+    'LEFT_ENCODER_ANGLE_SCALE': 0.247, # 编码器计数与旋转角度之间的缩放因子
     'LEFT_MOTOR_ANGLE_CTL_KP': -8.01, # 左侧电机角度控制的PID参数
     'LEFT_MOTOR_ANGLE_CTL_KI': -0.21,
     'LEFT_MOTOR_ANGLE_CTL_KD': -20.00,
