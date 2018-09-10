@@ -18,18 +18,18 @@ class MotorAngleControl(object):
         # 编码器
         self.encoder = encoder
         # 初始化编码器的计数
-        self.encoder._pos = 0
+        self.encoder.position = 0
         # PID对象
         self.pid = PID(kp, ki, kd, max_bias_sum=max_bias_sum)
         # 是否开启调试模式
         self.is_debug = is_debug
-        self.max_pwm = 300 # 测试角度控制的时候的最大PWM
-        if is_debug:
-            # 迭代次数计数
-            self._iteration = 0
+        self.max_pwm = 1023 # 测试角度控制的时候的最大PWM
+        # if is_debug:
+        # 迭代次数计数
+        self._iteration = 0
     
     def init(self):
-        self.encoder._pos = 0
+        self.encoder.position = 0
         self.pid.cur_bias = 0
         self.pid.bias_sum = 0
         self.pid.set_target_value(0)
@@ -49,29 +49,31 @@ class MotorAngleControl(object):
 
         if is_reset:
             # 电机角度重置，计数器清零
-            self.encoder._pos = 0
+            self.encoder.position = 0
             # 目标计数器加上之前编码器的值
             target_count += self.encoder.position
         
         # 设置PID的目标取值
         self.pid.set_target_value(target_count)
 
-    def callback(self, timer, min_threshold=1):
+    def callback(self, timer, min_threshold=3):
         '''回调函数'''
         # 获取当前编码器的真实取值
         real_value = self.encoder.position   
         # 更新PID
         pwm = self.pid.update(real_value)
-        if abs(real_value - self.pid.target_value) < min_threshold:
-            pwm = 0
+        
         # pwm的值放缩在 正负1023之间
         # 为了准确，这里需要限定一下速度
         # max_pwm = 1023
         max_pwm = self.max_pwm
         if abs(pwm) > max_pwm:
             pwm = max_pwm if pwm > 0 else -1*max_pwm
-        
-        self.motor.set_pwm(int(pwm))
+
+        if abs(real_value - self.pid.target_value) < min_threshold:
+            pwm = 0
+            
+        self.motor.pwm(int(pwm))
         
         if self.is_debug:
             self._iteration += 1
@@ -86,30 +88,96 @@ class MotorAngleControl(object):
         self.encoder.deinit()
         self.motor.deinit()
 
+# class MotorSpeedControl(object):
+#     '''电机速度PID控制'''
+#     def __init__(self, motor, encoder, kp, ki=0, kd=0, is_debug=False, max_bias_sum=None):
+#         self.motor = motor # 电机
+#         self.encoder = encoder # 编码器
+#         self.encoder._pos = 0 # 编码器初始化
+#         self.pid = PID(kp, ki, kd, max_bias_sum=max_bias_sum) # 创建PID对象
+#         self._speed = 0 # 电机旋转速度
+
+#         self.is_debug = is_debug
+        
+#         # if self.is_debug:
+#         self._iteration = 0 # PID迭代次数
+#     def init(self):
+#         '''
+#         重新初始化
+#         '''
+#         self.encoder._pos = 0
+#         self.pid.bias_sum = 0
+#         self.pid.cur_bias = 0
+#         self._iteration = 0
+#         self.pid.set_target_value(0)
+
+#     def speed(self, target_speed=None, target_posi=None):
+#         '''
+#         设置速度
+#         '''
+#         if target_speed is None:
+#             # 返回当前的速度
+#             return self._speed
+#         # 规约target ,计算控制周期内电机最大的target
+#         max_target = int(car_property['MOTOR_MAX_ANGLE']*car_property['PID_CTL_PERIOD'])
+#         if abs(target_speed) > max_target:
+#             target_speed = max_target if target_speed > 0 else -1 * max_target 
+#         # 设置pid目标值
+#         self.pid.set_target_value(target_speed) 
+
+#     def callback(self, timer, min_threshold=1):
+#         '''
+#         回调函数
+#         '''
+#         real_value = self.encoder.position # 读取一段时间内， 真实的电机旋转角度
+#         self._speed = real_value # 更新速度值
+#         pwm = self.pid.update(real_value) # 更新PID
+#         # if abs(real_value - self.pid.target_value) < min_threshold:
+#         #     pwm = 0
+#         self.motor.pwm(int(pwm))
+    
+#         # 编码器清零
+#         self.encoder._pos = 0
+#         if self.is_debug:
+#             self._iteration += 1
+#             if self._iteration > 4:
+#                 # 1s 打印一次
+#                 self._iteration = 0
+#                 print("Target: {} RealValue: {} PID Result: {}".format(self.pid.target_value, self._speed, pwm))
+#                 print('PWM: {}'.format(pwm))
+#     def deinit(self):
+#         self.encoder.deinit()
+#         self.motor.deinit()
+
+
 class MotorSpeedControl(object):
     '''电机速度PID控制'''
     def __init__(self, motor, encoder, kp, ki=0, kd=0, is_debug=False, max_bias_sum=None):
         self.motor = motor # 电机
         self.encoder = encoder # 编码器
-        self.encoder._pos = 0 # 编码器初始化
+        self.encoder.position = 0 # 编码器初始化
+        self.old_encoder_pos = self.encoder.position # 上一个时刻编码器的读数
+
         self.pid = PID(kp, ki, kd, max_bias_sum=max_bias_sum) # 创建PID对象
         self._speed = 0 # 电机旋转速度
 
         self.is_debug = is_debug
         
+        self.stop_flag = False
         # if self.is_debug:
         self._iteration = 0 # PID迭代次数
+
     def init(self):
         '''
         重新初始化
         '''
-        self.encoder._pos = 0
+        self.encoder.position = 0
         self.pid.bias_sum = 0
         self.pid.cur_bias = 0
         self._iteration = 0
         self.pid.set_target_value(0)
-
-    def speed(self, target_speed=None):
+        
+    def speed(self, target_speed=None, target_posi=None):
         '''
         设置速度
         '''
@@ -123,19 +191,33 @@ class MotorSpeedControl(object):
         # 设置pid目标值
         self.pid.set_target_value(target_speed) 
 
+        self.target_posi = target_posi # 设置编码器的目标值
+
     def callback(self, timer, min_threshold=1):
         '''
         回调函数
         '''
-        real_value = self.encoder.position # 读取一段时间内， 真实的电机旋转角度
-        self._speed = real_value # 更新速度值
-        pwm = self.pid.update(real_value) # 更新PID
-        # if abs(real_value - self.pid.target_value) < min_threshold:
-        #     pwm = 0
-        self.motor.set_pwm(int(pwm))
-    
-        # 编码器清零
-        self.encoder._pos = 0
+        # 判断电机是否需要停下
+        if self.target_posi is not None:
+            if self.target_posi > 0 and self.encoder.position >= self.target_posi:
+                self.speed(0)
+            elif self.target_posi < 0 and self.encoder.position <= self.target_posi:
+                self.speed(0)
+
+        # 读取一段时间内， 真实的电机旋转角度
+        real_speed = self.encoder.position - self.old_encoder_pos
+        self.old_encoder_pos = self.encoder.position
+
+        self._speed = real_speed # 更新速度值
+        pwm = self.pid.update(real_speed) # 更新PID
+        
+        if not self.stop_flag:
+            self.motor.pwm(int(pwm))
+        else:
+            # self.motor.pwm(0)
+            # TODO 测试速度减半
+            self.motor.pwm(int(pwm * 0.5))
+
         if self.is_debug:
             self._iteration += 1
             if self._iteration > 4:

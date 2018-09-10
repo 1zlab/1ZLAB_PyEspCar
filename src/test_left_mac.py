@@ -1,10 +1,3 @@
-'''
-
-[BUG]
-1. 测试左侧电机， 右侧电机转了？好坑
-2. 电机转速 speed 设定target 不可以
-3. 调速后 旋转之后，总是卡顿 不能连续旋转
-'''
 import micropython
 from  machine import Pin,Timer
 import utime
@@ -14,7 +7,7 @@ from car_config import gpio_dict, car_property
 from user_button import UserButton
 from motor import Motor
 from encoder import Encoder
-from pid_motor import MotorSpeedControl
+from pid_motor import MotorAngleControl
 
 
 # 设定紧急意外缓冲区的大小为100
@@ -40,12 +33,13 @@ left_encoder = Encoder(left_pin_a, left_pin_b,
     scale=car_property['LEFT_ENCODER_ANGLE_SCALE'])
 
 # 左侧电机速度控制PID
-kp = car_property['LEFT_MOTOR_SPEED_CTL_KP']
-ki = car_property['LEFT_MOTOR_SPEED_CTL_KI']
-kd = car_property['LEFT_MOTOR_SPEED_CTL_KD']
+kp = car_property['LEFT_MOTOR_ANGLE_CTL_KP']
+ki = car_property['LEFT_MOTOR_ANGLE_CTL_KI']
+kd = car_property['LEFT_MOTOR_ANGLE_CTL_KD']
 
-left_speed_pid = MotorSpeedControl(left_motor, left_encoder, 
+left_mac = MotorAngleControl(left_motor, left_encoder, 
         kp = kp, ki = ki, kd = kd,
+        max_bias_sum=car_property['LEFT_MOTOR_ANGLE_CTL_MAX_BIAS_SUM'],
         is_debug=False)
 
 def btn_callback(pin):
@@ -53,10 +47,10 @@ def btn_callback(pin):
     回调函数
     改变小车的标志位
     '''
-    global left_speed_pid
+    global left_mac
     print('User Button Pressed')
     utime.sleep_ms(500)
-    left_speed_pid.is_debug = not left_speed_pid.is_debug
+    left_mac.is_debug = not left_mac.is_debug
 
 # 用户按键引脚编号
 USER_BUTTON = gpio_dict['USER_BUTTON']
@@ -64,24 +58,12 @@ USER_BUTTON = gpio_dict['USER_BUTTON']
 btn = UserButton(USER_BUTTON, btn_callback)
 
 
-def speed_ctl_callback(timer):
+def callback(timer):
     # 速度控制回调函数
-    left_speed_pid.callback(timer, min_threshold=0)
+    left_mac.callback(timer, min_threshold=3)
     
-timer = Timer(2)
+# 创建定时器 这里用的是定时器4
+timer = Timer(4)
 # 设置定时器回调 100ms执行一次
-timer.init(period=100, mode=Timer.PERIODIC, callback=speed_ctl_callback)
 
-# 设置左侧电机转速
-left_speed_pid.speed(50)
-
-# 按下用户按键，可以查看PID控制的日志
-
-
-# try:
-#     while True:
-#         pass
-# except:
-#     timer.deinit()
-#     left_speed_pid.deinit()
-
+timer.init(period=25, mode=Timer.PERIODIC, callback=callback)

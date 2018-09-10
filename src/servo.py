@@ -2,6 +2,10 @@
 '''
 舵机控制的代码
 
+
+TODO 改用软件生成PWM 
+    定时器50ms周期
+
 云台下臂舵机： 
     270度舵机  duty范围 24 - 130 中间duty：77
 云台上臂舵机: 
@@ -16,7 +20,7 @@ class Servo:
         构造器函数
         '''
         self.pin = pin # 舵机管脚
-        self.pwm = PWM(pin, freq=car_property['PWM_FREQUENCY']) # 创建一个PWM的对象
+        self.pwm = PWM(pin, freq=50) # 创建一个PWM的对象
         self.angle_range = angle_range # 舵机旋转角度范围
         self.default_angle = default_angle # 默认的角度
         self.min_duty = min_duty # 最小占空比

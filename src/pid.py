@@ -42,6 +42,7 @@ class PID(object):
             if len(self.error_list) > self.max_bias_win:
                 old_err = self.error_list.pop(0) # 弹出队尾元素
                 self.bias_sum -= old_err # 减去旧的error
+
         # 更新偏差的积分
         self.bias_sum += self.cur_bias
         
