@@ -81,12 +81,3 @@ gpio_dict = {
     "SERVO_1": 27, # 舵机1
     "SERVO_2": 12 # 舵机2
 }
-
-
-# PID控制参数
-# TODO 已废弃
-pid_param_dict = {
-    'MOTOR_ANGLE_CTL_KP': -1.99,
-    'MOTOR_ANGLE_CTL_KI': -0.31,
-    'MOTOR_ANGLE_CTL_KD': -2.07
-}
