@@ -1,0 +1,194 @@
+Board Information Report
+Filename     : E:\GitHub\1ZLAB_ESP32_WIFI_Car\hardware\PCBÎÄ¼þ\v2.1\PyESPCar_Z1.PcbDoc
+Date         : 2018/9/1
+Time         : 21:47:44
+Time Elapsed : 00:00:00
+
+General
+    Board Size, 3543.307milsx3385.827mils
+    Components on board, 48
+count : 2
+
+Routing Information
+    Routing completion, 100.00%
+    Connections, 188
+    Connections routed, 188
+    Connections remaining, 0
+count : 4
+
+Layer, Arcs, Pads, Vias, Tracks, Texts, Fills, Regions, ComponentBodies
+    Top Layer, 0, 111, 0, 288, 0, 4, 146, 0
+    Bottom Layer, 0, 0, 0, 175, 0, 2, 153, 0
+    Mechanical 1, 2, 0, 0, 0, 0, 0, 0, 2
+    Mechanical 13, 0, 0, 0, 54, 0, 0, 0, 34
+    Mechanical 15, 0, 0, 0, 42, 0, 0, 0, 0
+    Top Overlay, 37, 0, 0, 3857, 154, 2, 0, 0
+    Bottom Overlay, 0, 0, 0, 0, 0, 0, 0, 0
+    Top Paste, 0, 0, 0, 0, 0, 0, 0, 0
+    Bottom Paste, 0, 0, 0, 0, 0, 0, 0, 0
+    Top Solder, 0, 0, 0, 0, 0, 0, 0, 0
+    Bottom Solder, 0, 0, 0, 0, 0, 0, 0, 0
+    Drill Guide, 0, 0, 0, 0, 0, 0, 0, 0
+    Keep-Out Layer, 6, 0, 0, 4, 0, 0, 2, 0
+    Drill Drawing, 0, 0, 0, 0, 0, 0, 0, 0
+    Multi-Layer, 0, 132, 37, 0, 0, 0, 3, 0
+count : 15
+
+Drill Pairs, Vias
+    Top Layer - Bottom Layer, 37
+count : 1
+
+Non-Plated Hole Size, Pads, Vias
+count : 0
+
+Plated Hole Size, Pads, Vias
+    0mils, 111, 0
+    12mils, 0, 33
+    35.433mils, 125, 0
+    45mils, 2, 0
+    125.984mils, 0, 4
+count : 5
+
+Non-Plated Slot Size / Length, Pads
+count : 0
+
+Plated Slot Size / Length, Pads
+    19.685mil / 78.74mil, 2
+    47.244mil / 70.866mil, 3
+count : 2
+
+Non-Plated Square Hole Size, Pads
+count : 0
+
+Plated Square Hole Size, Pads
+count : 0
+
+Top Layer Annular Ring Size, Count
+    13mils, 32
+    23mils, 1
+    23.622mils, 125
+    31.496mils, 4
+    45mils, 2
+    98.425mils, 2
+    110.236mils, 3
+count : 7
+
+Mid Layer Annular Ring Size, Count
+    13mils, 32
+    23mils, 1
+    23.622mils, 125
+    31.496mils, 4
+    45mils, 2
+    98.425mils, 2
+    110.236mils, 3
+count : 7
+
+Bottom Layer Annular Ring Size, Count
+    13mils, 32
+    23mils, 1
+    23.622mils, 125
+    31.496mils, 4
+    45mils, 2
+    98.425mils, 2
+    110.236mils, 3
+count : 7
+
+Pad Solder Mask, Count
+    4mils, 243
+count : 1
+
+Pad Paste Mask, Count
+    0mils, 243
+count : 1
+
+Pad Pwr/Gnd Expansion, Count
+    20mils, 243
+count : 1
+
+Pad Relief Conductor Width, Count
+    10mils, 243
+count : 1
+
+Pad Relief Air Gap, Count
+    10mils, 243
+count : 1
+
+Pad Relief Entries, Count
+    4, 243
+count : 1
+
+Via Solder Mask, Count
+    4mils, 37
+count : 1
+
+Via Pwr/Gnd Expansion, Count
+    20mils, 37
+count : 1
+
+Track Width, Count
+    0.8mils, 1137
+    1.2mils, 2418
+    1.969mils, 16
+    3.937mils, 75
+    7.874mils, 207
+    8mils, 12
+    9.843mils, 4
+    10mils, 84
+    15mils, 201
+    15.748mils, 4
+    18mils, 29
+    20mils, 2
+    25mils, 61
+    30mils, 20
+    35mils, 20
+    40mils, 9
+    50mils, 41
+    52mils, 12
+    55mils, 41
+    65mils, 27
+count : 20
+
+Arc Line Width, Count
+    7.874mils, 35
+    10mils, 3
+    11.811mils, 2
+    15.748mils, 5
+count : 4
+
+Arc Radius, Count
+    5.906mils, 2
+    7.874mils, 1
+    15.748mils, 16
+    15.748mils, 16
+    19.685mils, 2
+    22mils, 2
+    60mils, 1
+    94.092mils, 1
+    157.48mils, 4
+count : 9
+
+Arc Degrees, Count
+    45, 1
+    90, 36
+    360, 8
+count : 3
+
+Text Height, Count
+    60mils, 149
+    90mils, 1
+    100mils, 1
+    137.795mils, 1
+    160mils, 2
+count : 5
+
+Text Width, Count
+    10mils, 154
+count : 1
+
+Net Track Width, Count
+    10mils, 49
+count : 1
+
+Net Via Size, Count
+    39.37mils, 49
+count : 1
