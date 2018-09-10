@@ -1,6 +1,9 @@
 '''
 测试用户按键
 '''
+import machine
+machine.reset()
+
 from user_button import UserButton
 from car_config import gpio_dict
 
