@@ -14,24 +14,16 @@ API参考ROS的TurtleSim
 3. 小车可以在地上绘制1ZLAB
 4. 小车速度控制 + 角度控制
 
-[存在问题]
+## 定速控制
+已ok 当v > 0.5 以上的时候,小车可以正确的走直线
 
-3. [BUG] move同样的幅度，前进与后退效果不一样，向后距离大一些
-    且后向的前进举例更接近真实值
-4. [BUG] move 0.1 0.2 0.5 实际前进距离指数式增加
-    TODO 测试PWM不同取值，对应电机速度
-    ?电机有一个启动时间
-8. [BUG] 累积误差问题, 前进时间长了,角度偏移就越来越大
-   [TODO] Move或者旋转之后,添加一个位姿修正
-[TODO] 电机存在一个启动时间,而且可能是一个轮子先动,在旋转较小角度的时候,这个问题比较明显.
-? 小车旋转角度的反馈信号
-[TODO] PID速度控制 编码器改成增量式
+## 定距控制
 
-[TODO] 前进距离与实际尺寸不符合
+TODO 添加了位姿推导,待测试
 '''
 import math
 import utime
-from machine import Pin,Timer
+from machine import Pin,Timer,I2C
 
 from car_config import car_property, gpio_dict
 from battery_voltage import BatteryVoltage
@@ -39,7 +31,7 @@ from user_button import UserButton
 from motor import Motor
 from encoder import Encoder
 from pid_motor import MotorSpeedControl,MotorAngleControl
-
+from servo import CloudPlatform
 
 class Pose:
     '''
@@ -51,6 +43,14 @@ class Pose:
         self.theta = theta # 角度
         self.linear_velocity = linear_velocity# 小车线速度
         self.angular_velocity = angular_velocity # 小车角速度 
+
+    def __str__(self):
+        return 'x: {}, y: {}, theta:{}, linear_v: {}, angular_v:{}'.format(
+            self.x, 
+            self.y, 
+            self.theta,
+            self.linear_velocity,
+            self.angular_velocity)
 
 class Car(object):
     def __init__(self, is_debug=False):
@@ -126,24 +126,24 @@ class Car(object):
             max_bias_sum = car_property['RIGHT_MOTOR_SPEED_CTL_MAX_BIAS_SUM'],
             is_debug=False)
         
-        # 左侧电机的角度控制
-        self.left_mac = MotorAngleControl(
-            self.left_motor,
-            self.left_encoder,
-            kp = car_property['LEFT_MOTOR_ANGLE_CTL_KP'],
-            ki = car_property['LEFT_MOTOR_ANGLE_CTL_KI'],
-            kd = car_property['LEFT_MOTOR_ANGLE_CTL_KD'],
-            max_bias_sum = car_property['LEFT_MOTOR_ANGLE_CTL_MAX_BIAS_SUM'],
-            is_debug = False)
-        # 右侧电机的角度控制
-        self.right_mac = MotorAngleControl(
-            self.right_motor,
-            self.right_encoder,
-            kp = car_property['RIGHT_MOTOR_ANGLE_CTL_KP'],
-            ki = car_property['RIGHT_MOTOR_ANGLE_CTL_KI'],
-            kd = car_property['RIGHT_MOTOR_ANGLE_CTL_KD'],
-            max_bias_sum = car_property['RIGHT_MOTOR_ANGLE_CTL_MAX_BIAS_SUM'],
-            is_debug = False)
+        # # 左侧电机的角度控制
+        # self.left_mac = MotorAngleControl(
+        #     self.left_motor,
+        #     self.left_encoder,
+        #     kp = car_property['LEFT_MOTOR_ANGLE_CTL_KP'],
+        #     ki = car_property['LEFT_MOTOR_ANGLE_CTL_KI'],
+        #     kd = car_property['LEFT_MOTOR_ANGLE_CTL_KD'],
+        #     max_bias_sum = car_property['LEFT_MOTOR_ANGLE_CTL_MAX_BIAS_SUM'],
+        #     is_debug = False)
+        # # 右侧电机的角度控制
+        # self.right_mac = MotorAngleControl(
+        #     self.right_motor,
+        #     self.right_encoder,
+        #     kp = car_property['RIGHT_MOTOR_ANGLE_CTL_KP'],
+        #     ki = car_property['RIGHT_MOTOR_ANGLE_CTL_KI'],
+        #     kd = car_property['RIGHT_MOTOR_ANGLE_CTL_KD'],
+        #     max_bias_sum = car_property['RIGHT_MOTOR_ANGLE_CTL_MAX_BIAS_SUM'],
+        #     is_debug = False)
         
         # 小车控制模式 默认状态为角度控制
         self.car_ctl_mode = car_property['CAR_CTL_MODE']['STOP']
@@ -171,6 +171,35 @@ class Car(object):
         
         if self.is_debug:
             print('切换stopflag flag={}'.format(self.stop_flag))
+    
+    def update_pose(self):
+        '''
+        根据运动控制学 更新当前的位姿
+        '''
+        # 将角度变化量变为左右两侧电机的直线速度
+        v_left = self.motor_angle_to_velocity(self.left_msc._speed)
+        v_right = self.motor_angle_to_velocity(self.right_msc._speed)
+
+        # 计算旋转半径
+        r = 0.5 * car_property['CAR_WIDTH'] * (v_left + v_right) / (v_right - v_left)
+        # 计算得到小车的速度
+        v_car = (r * v_right) / (r + car_property['CAR_WIDTH'] / 2)
+        # 计算当前的偏转角度
+        theta = math.atan(car_property['CAR_LENGTH'] / r)
+        
+        delta_t = car_property['PID_CTL_PERIOD']
+        
+        # 更新线速度
+        self.pose.linear_velocity = v_car
+        # 更新角速度
+        self.pose.angular_velocity = v_car / r
+        # 更新小车的偏转角度 (弧度值)
+        self.pose.theta = delta_t * self.pose.angular_velocity
+        # 更新小车的坐标
+        move_dis = delta_t * self.pose.linear_velocity
+        self.pose.x += delta_t * math.cos(self.pose.theta)
+        self.pose.y += delta_t * math.sin(self.pose.theta)
+
 
     def callback(self, timer):
         '''
@@ -178,33 +207,41 @@ class Car(object):
         '''
         # 电池ADC采样回调
         self.battery_adc.callback(timer)
+        # 回调函数
+        self.left_msc.callback(timer)
+        self.right_msc.callback(timer)
         
-        if not self.stop_flag:
-            if self.car_ctl_mode == car_property['CAR_CTL_MODE']['GO_STRAIGHT']:
-                # 小车走直线的控制模式
-                # 添加两轮角度校准, 确保走直线
-                self.left_msc.stop_flag = abs(self.left_encoder.position) > abs(self.right_encoder.position)
-                self.right_msc.stop_flag = abs(self.left_encoder.position) < abs(self.right_encoder.position)
-                # 进入小车速度控制模式
-                self.left_msc.callback(timer)
-                self.right_msc.callback(timer)
-            elif self.car_ctl_mode == car_property['CAR_CTL_MODE']['POINT_TURN']:
-                # 原地旋转模式 
-                # TODO ?
-                # 添加两轮角度校准, 确保原地旋转
-                self.left_msc.stop_flag = abs(self.left_encoder.position) > abs(self.right_encoder.position)
-                self.right_msc.stop_flag = abs(self.left_encoder.position) < abs(self.right_encoder.position)
-                # 进入小车速度控制模式
-                self.left_msc.callback(timer)
-                self.right_msc.callback(timer)
-            elif self.car_ctl_mode == car_property['CAR_CTL_MODE']['SPEED']:
-                # 速度控制模式
-                self.left_msc.callback(timer)
-                self.right_msc.callback(timer)
-            elif self.car_ctl_mode == car_property['CAR_CTL_MODE']['STOP']:
-                # 进入小车停止位控制模式
-                self.left_mac.callback(timer)
-                self.right_mac.callback(timer)
+        # 更新当前的位姿
+        self.update_pose()
+        
+        # if not self.stop_flag:
+        #     if self.car_ctl_mode == car_property['CAR_CTL_MODE']['GO_STRAIGHT']:
+        #         # 小车走直线的控制模式
+        #         diff = self.left_encoder.position - self.right_encoder.position
+
+        #         # 添加两轮角度校准, 确保走直线
+        #         self.left_msc.stop_flag = diff > 10
+        #         self.right_msc.stop_flag = diff < -10 # abs(self.left_encoder.position) < abs(self.right_encoder.position)
+        #         # 进入小车速度控制模式
+        #         self.left_msc.callback(timer)
+        #         self.right_msc.callback(timer)
+        #     elif self.car_ctl_mode == car_property['CAR_CTL_MODE']['POINT_TURN']:
+        #         # 原地旋转模式 
+        #         # TODO ?
+        #         # 添加两轮角度校准, 确保原地旋转
+        #         self.left_msc.stop_flag = abs(self.left_encoder.position) > abs(self.right_encoder.position)
+        #         self.right_msc.stop_flag = abs(self.left_encoder.position) < abs(self.right_encoder.position)
+        #         # 进入小车速度控制模式
+        #         self.left_msc.callback(timer)
+        #         self.right_msc.callback(timer)
+        #     elif self.car_ctl_mode == car_property['CAR_CTL_MODE']['SPEED']:
+        #         # 速度控制模式
+        #         self.left_msc.callback(timer)
+        #         self.right_msc.callback(timer)
+        #     elif self.car_ctl_mode == car_property['CAR_CTL_MODE']['STOP']:
+        #         # 进入小车停止位控制模式
+        #         # self.left_mac.callback(timer)
+        #         # self.right_mac.callback(timer)
             
             
     def distance2angle(self, distance):
@@ -283,10 +320,11 @@ class Car(object):
         '''
         小车停止
         '''
-        # 自动切换为停止模式
-        self.car_ctl_mode = car_property['CAR_CTL_MODE']['STOP']
-        self.left_mac.init()
-        self.right_mac.init()
+        # # 自动切换为停止模式
+        # self.car_ctl_mode = car_property['CAR_CTL_MODE']['STOP']
+        self.speed(0)
+        # self.left_mac.init()
+        # self.right_mac.init()
         
         if self.is_debug:
             print('Car Stop')
@@ -313,7 +351,17 @@ class Car(object):
         # 1s内旋转的角度总和 / PID控制频率
         angle = angle / (1 / period)
         return angle
-    
+    def motor_angle_to_velocity(self, angle):
+        '''
+        将角度转换为直线速度
+        '''
+        period = car_property['PID_CTL_PERIOD'] # PID控制周期 单位s
+        angle *= (1 / period) # 转换成每s电机旋转的角度
+        # 计算得到直线速度 m / s
+        velocity = (angle / 360) * (2 * math.pi * car_property['WHEEL_RADIUS'])
+        return velocity
+
+
     def kinematic_analysis(self, velocity, angle, delay_ms=None, left_target_posi=None, right_target_posi=None):
         '''
         运动学分析与控制
@@ -325,8 +373,9 @@ class Car(object):
         self.left_msc.init()
         self.right_msc.init()
 
+        max_v = car_property['CAR_MAX_SPEED']
         # velocity 速度规约
-        if abs(velocity) > car_property['CAR_MAX_SPEED']:
+        if abs(velocity) > max_v:
             # 规约速度
             velocity = max_v if velocity > 0 else -1 * max_v
         

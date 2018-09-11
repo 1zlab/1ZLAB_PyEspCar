@@ -15,7 +15,7 @@ car_property = {
     },
     'PWM_FREQUENCY': 1000, # 电机控制与舵机控制的PWM
                             # 推荐频率 500Hz - 30000HZ
-    'PID_CTL_PERIOD': 0.010, # PID控制周期 单位s 0.025
+    'PID_CTL_PERIOD': 0.010, # PID控制周期 单位s 0.010
     'CAR_MAX_SPEED': 5.89, # 小车的最大直线速度, m/s
     'MOTOR_MAX_ANGLE': 2600, # 25ms内,电机最多转65度 1s -> 65 * 40
     'LEFT_MOTOR_INSTALL_DIR': False, # 左侧电机的安装方向
