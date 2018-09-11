@@ -70,6 +70,15 @@ class Car(object):
             gpio_dict['USER_BUTTON'], 
             callback=lambda timer: self.user_button_callback(timer))
         
+        # 创建一个I2C对象
+        i2c = I2C(
+            scl=Pin(gpio_dict['I2C_SCL']),
+            sda=Pin(gpio_dict['I2C_SDA']),
+            freq=car_property['I2C_FREQUENCY'])
+
+        # 创建舵机云台对象
+        self.cloud_platform = CloudPlatform(i2c)
+
         # 左侧电机
         self.left_motor = Motor(
             gpio_dict['LEFT_MOTOR_A'],
@@ -282,7 +291,7 @@ class Car(object):
         if self.is_debug:
             print('Car Stop')
     
-    def speed(self, velocity, angle, delay_ms=None):
+    def speed(self, velocity, angle=0, delay_ms=None):
         '''
         小车速度控制模式
         @velocity: 小车直线速度
