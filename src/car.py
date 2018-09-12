@@ -18,8 +18,6 @@ API参考ROS的TurtleSim
 已ok 当v > 0.5 以上的时候,小车可以正确的走直线
 
 ## 定距控制
-
-TODO 添加了位姿推导,待测试
 '''
 import math
 import utime
@@ -153,7 +151,7 @@ class Car(object):
         self.is_debug = is_debug # 是否开始调试模式
         
         # 执行单次的计时器
-        self.one_shot_timer = Timer(car_property['CAR_ONE_SHOT_TIMER_ID'])
+        # self.one_shot_timer = Timer(car_property['CAR__ID'])
 
     def user_button_callback(self, pin):
         '''
@@ -175,13 +173,20 @@ class Car(object):
     def update_pose(self):
         '''
         根据运动控制学 更新当前的位姿
+        TODO v_left = v_right的情况
+        TODO v_left = -v_right的情况?
+        BUG 运动学模型仅仅适合两个轮子速度 同为正或者同为负的情况.
         '''
         # 将角度变化量变为左右两侧电机的直线速度
         v_left = self.motor_angle_to_velocity(self.left_msc._speed)
         v_right = self.motor_angle_to_velocity(self.right_msc._speed)
 
-        # 计算旋转半径
-        r = 0.5 * car_property['CAR_WIDTH'] * (v_left + v_right) / (v_right - v_left)
+        # 旋转半径 默认为无穷大
+        r = 1000000000000 # 旋转半径
+        if v_left != v_right:
+            # 计算旋转半径
+            r = 0.5 * car_property['CAR_WIDTH'] * (v_left + v_right) / (v_right - v_left)
+        
         # 计算得到小车的速度
         v_car = (r * v_right) / (r + car_property['CAR_WIDTH'] / 2)
         # 计算当前的偏转角度
@@ -197,10 +202,9 @@ class Car(object):
         self.pose.theta = delta_t * self.pose.angular_velocity
         # 更新小车的坐标
         move_dis = delta_t * self.pose.linear_velocity
-        self.pose.x += delta_t * math.cos(self.pose.theta)
-        self.pose.y += delta_t * math.sin(self.pose.theta)
-
-
+        self.pose.x += move_dis * math.cos(self.pose.theta)
+        self.pose.y += move_dis * math.sin(self.pose.theta)
+    
     def callback(self, timer):
         '''
         小车PID控制回调函数
@@ -211,8 +215,8 @@ class Car(object):
         self.left_msc.callback(timer)
         self.right_msc.callback(timer)
         
-        # 更新当前的位姿
-        self.update_pose()
+        # BUG 更新当前的位姿
+        # self.update_pose()
         
         # if not self.stop_flag:
         #     if self.car_ctl_mode == car_property['CAR_CTL_MODE']['GO_STRAIGHT']:
@@ -240,8 +244,8 @@ class Car(object):
         #         self.right_msc.callback(timer)
         #     elif self.car_ctl_mode == car_property['CAR_CTL_MODE']['STOP']:
         #         # 进入小车停止位控制模式
-        #         # self.left_mac.callback(timer)
-        #         # self.right_mac.callback(timer)
+        #         self.left_mac.callback(timer)
+        #         self.right_mac.callback(timer)
             
             
     def distance2angle(self, distance):
@@ -368,6 +372,8 @@ class Car(object):
         @velocity: 小车前进的直线速度, 单位m/s
         @angle： 小车的旋转角度, 单位 度
         @time: 小车的前进时间, 单位ms
+
+        TODO 此运动学控制模型, 仅适合两个轮子速度同为正,或者同为负的时候
         '''
         # 初始化
         self.left_msc.init()
@@ -426,6 +432,6 @@ class Car(object):
         self.battery_adc.deinit()
         self.user_button.deinit()
         # mac 与 msc只需要销毁一次
-        self.left_mac.deinit()
-        self.right_mac.deinit()
+        # self.left_mac.deinit()
+        # self.right_mac.deinit()
         # self.tmp_timer.deinit()

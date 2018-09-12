@@ -12,6 +12,10 @@ micropython.alloc_emergency_exception_buf(100)
 # 创建一个小车
 car = Car(is_debug=True)
 
+# 停止 只测速不驱动电机
+car.left_msc.stop_flag = True
+car.right_msc.stop_flag = True
+
 # 创建定时器 这里用的是定时器4
 timer = Timer(4)
 # 设置定时器回调 100ms执行一次

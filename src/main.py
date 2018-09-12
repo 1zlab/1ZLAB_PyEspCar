@@ -40,6 +40,6 @@ if __name__ == '__main__':
     # exec(open('test_uart_left_msc.py').read(), globals())
 
     # 测试car
-    exec(open('test_car.py').read(), globals())
+    # exec(open('test_car.py').read(), globals())
     # 小车前进1m
     # car.move(1)

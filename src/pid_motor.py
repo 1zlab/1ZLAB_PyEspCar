@@ -17,6 +17,7 @@ from car_config import car_property
 #         self.motor = motor
 #         # 编码器
 #         self.encoder = encoder
+#         self.old_encoder_pos = 0
 #         # 初始化编码器的计数
 #         self.encoder.position = 0
 #         # PID对象
@@ -27,12 +28,13 @@ from car_config import car_property
 #         # if is_debug:
 #         # 迭代次数计数
 #         self._iteration = 0
-    
+
 #     def init(self):
 #         self.encoder.position = 0
 #         self.pid.cur_bias = 0
 #         self.pid.bias_sum = 0
 #         self.pid.set_target_value(0)
+#         self.old_encoder_pos = 0
 
 #     def set_angle(self, angle, is_reset=False):
 #         '''
@@ -52,17 +54,25 @@ from car_config import car_property
 #             self.encoder.position = 0
 #             # 目标计数器加上之前编码器的值
 #             target_count += self.encoder.position
-        
+
 #         # 设置PID的目标取值
 #         self.pid.set_target_value(target_count)
 
-#     def callback(self, timer, min_threshold=3):
+#     def callback(self, timer, min_threshold=3, max_threshold=40):
 #         '''回调函数'''
 #         # 获取当前编码器的真实取值
-#         real_value = self.encoder.position   
+#         real_value = self.encoder.position
+#         # 对真实值进行修正 (简单滤波)
+#         delta_posi =  real_value - self.old_encoder_pos 
+#         if abs(delta_posi) > max_threshold:
+#             self.encoder.position = self.old_encoder_pos 
+#             real_value = self.old_encoder_pos
+#         else:
+#             self.old_encoder_pos = real_value
+
 #         # 更新PID
 #         pwm = self.pid.update(real_value)
-        
+
 #         # pwm的值放缩在 正负1023之间
 #         # 为了准确，这里需要限定一下速度
 #         # max_pwm = 1023
@@ -72,9 +82,9 @@ from car_config import car_property
 
 #         if abs(real_value - self.pid.target_value) < min_threshold:
 #             pwm = 0
-            
+    
 #         self.motor.pwm(int(pwm))
-        
+
 #         if self.is_debug:
 #             self._iteration += 1
 #             if self._iteration > 10:
@@ -82,7 +92,7 @@ from car_config import car_property
 #                 self._iteration = 0
 #                 print("Target: {} RealValue: {} PID Result: {}".format(self.pid.target_value, self.encoder.position, pwm))
 #                 print('PWM: {}'.format(pwm))
-    
+
 #     def deinit(self):
 #         '''销毁资源'''
 #         self.encoder.deinit()
