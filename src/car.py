@@ -45,9 +45,17 @@ class Pose:
         return 'x: {}, y: {}, theta:{}, linear_v: {}, angular_v:{}'.format(
             self.x, 
             self.y, 
-            self.theta,
+            math.degrees(self.theta),
             self.linear_velocity,
             self.angular_velocity)
+
+    def reset(self):
+        self.x = 0
+        self.y = 0
+        self.theta = 0
+        self.linear_velocity = 0
+        self.angular_velocity = 0
+
 
 class Car(object):
     def __init__(self, is_debug=False):
@@ -172,37 +180,48 @@ class Car(object):
     def update_pose(self):
         '''
         根据运动控制学 更新当前的位姿
-        TODO v_left = v_right的情况
-        TODO v_left = -v_right的情况?
-        BUG 运动学模型仅仅适合两个轮子速度 同为正或者同为负的情况.
+        涉及到刚体运动学的知识
+        参考文章
+        https://blog.csdn.net/qq_16149777/article/details/73224070
+        https://blog.csdn.net/u010422438/article/details/82256280
         '''
         # 将角度变化量变为左右两侧电机的直线速度
         v_left = self.motor_angle_to_velocity(self.left_msc._speed)
         v_right = self.motor_angle_to_velocity(self.right_msc._speed)
 
         # 旋转半径 默认为无穷大
-        r = 1000000000000 # 旋转半径
-        if v_left != v_right:
+        r = None # 旋转半径
+        v_car = None # 小车速度
+        if v_left == v_right:
+            # 小车做直线运动
+            r = 1e100 # 旋转半径为无穷大, 但是math没有 inf
+            self.pose.linear_velocity = v_left
+
+        elif v_left == -v_right:
+            # 小车做自旋运动
+            r = 0
+            self.pose.linear_velocity = 0
+        else:
+            # 小车做曲弧运动
             # 计算旋转半径
-            r = 0.5 * car_property['CAR_WIDTH'] * (v_left + v_right) / (v_right - v_left)
+            r = (car_property['CAR_WIDTH'] / 2) * ((v_left + v_right) / (v_left-v_right))
+            self.pose.linear_velocity = (v_left + v_right) / 2
         
-        # 计算得到小车的速度
-        v_car = (r * v_right) / (r + car_property['CAR_WIDTH'] / 2)
-        # 计算当前的偏转角度
-        theta = math.atan(car_property['CAR_LENGTH'] / r)
-        
+        # 控制周期,时间变化量
         delta_t = car_property['PID_CTL_PERIOD']
-        
-        # 更新线速度
-        self.pose.linear_velocity = v_car
+        # 小车角度增量
+        delta_theta =  (v_right - v_left) * delta_t / car_property['CAR_WIDTH']
         # 更新角速度
-        self.pose.angular_velocity = v_car / r
+        self.pose.angular_velocity = delta_theta / delta_t
+
         # 更新小车的偏转角度 (弧度值)
-        self.pose.theta = delta_t * self.pose.angular_velocity
-        # 更新小车的坐标
-        move_dis = delta_t * self.pose.linear_velocity
-        self.pose.x += move_dis * math.cos(self.pose.theta)
-        self.pose.y += move_dis * math.sin(self.pose.theta)
+        self.pose.theta += delta_theta
+
+        # 更新小车的坐标(M点的轨迹方程)
+        self.pose.x += -1*(v_left + v_right) * math.sin(self.pose.theta)
+        self.pose.y += (v_left + v_right) * math.cos(self.pose.theta)
+
+        
     
     def callback(self, timer):
         '''
@@ -214,8 +233,8 @@ class Car(object):
         self.left_msc.callback(timer)
         self.right_msc.callback(timer)
         
-        # BUG 更新当前的位姿
-        # self.update_pose()
+        # 更新当前的位姿
+        self.update_pose()
         
         # if not self.stop_flag:
         #     if self.car_ctl_mode == car_property['CAR_CTL_MODE']['GO_STRAIGHT']:
