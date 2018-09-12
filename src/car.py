@@ -2,8 +2,6 @@
 小车对象
 
 功能描述：
-* 设置两个电机的转速（速度采样） <-- 先写这个
-* 设置两个电机的旋转角度/圈数
 
 API参考ROS的TurtleSim
 
@@ -18,6 +16,7 @@ API参考ROS的TurtleSim
 已ok 当v > 0.5 以上的时候,小车可以正确的走直线
 
 ## 定距控制
+
 '''
 import math
 import utime
@@ -28,7 +27,7 @@ from battery_voltage import BatteryVoltage
 from user_button import UserButton
 from motor import Motor
 from encoder import Encoder
-from pid_motor import MotorSpeedControl,MotorAngleControl
+from pid_motor import MotorSpeedControl
 from servo import CloudPlatform
 
 class Pose:
@@ -255,6 +254,26 @@ class Car(object):
         delta_angle = 360 * distance / (2 * math.pi * car_property['WHEEL_RADIUS'])
         return delta_angle
 
+    def go_forward(self, distance=None, speed=0.5):
+        '''
+        小车前进
+        '''
+        if distance is None:
+            # 设置为速度模式
+            self.speed(speed)
+        else:
+            self.go(distance, speed=speed)
+    
+    def go_backward(self, distance=None, speed=0.5):
+        '''
+        小车后退
+        '''
+        if distance is None:
+            self.speed(-1*speed)
+        else:
+            self.go(-1*distance,speed=-1*speed)
+        
+
     def go(self, distance, speed=0.5):
         '''
         小车直线前进 Go Straight
@@ -277,27 +296,37 @@ class Car(object):
             left_target_posi=target_posi,
             right_target_posi=target_posi)
 
-    def turn(self, angle, speed=0.3, scalar=2):
+    
+    def turn_left(self, speed=0.5):
+        '''
+        小车左转
+        '''
+        self.turn(turn_dir=-1, speed=speed)
+
+    def turn_right(self, speed=0.5):
+        '''
+        小车右转
+        '''
+        self.turn(turn_dir=1, speed=speed)
+
+    
+    def turn(self, turn_dir=1, speed=0.5):
         '''
         小车原地旋转 point-turn
         默认旋转线速度是 0.3m/s
-        
-        TODO 旋转的时候,有损耗,需要添加一个比例系数(不准确)
-        45 2.2
-        90 2
-        180 1.8
-        360 1.5
-        720 1.32
 
-        TODO 把延时修改为编码器角度控制
+        @dir: 
+            1  向左转
+            -1 向右转
+         
         '''
         # 控制模式为原地旋转模式
         self.car_ctl_mode = car_property['CAR_CTL_MODE']['POINT_TURN']
 
-        # 将小车旋转角度转换为电机前进距离
-        distance = (angle / 360) *  math.pi * car_property['CAR_WIDTH'] 
-        # 计算时延
-        time_ms = int(abs(distance / speed) * 1000 * scalar)
+        # # 将小车旋转角度转换为电机前进距离
+        # distance = (angle / 360) *  math.pi * car_property['CAR_WIDTH'] 
+        # # 计算时延
+        # time_ms = int(abs(distance / speed) * 1000 * scalar)
         # 计算每个控制周期内电机的旋转角度
         motor_speed = self.velocity_to_motor_angle(speed)
         # 初始化
@@ -305,20 +334,22 @@ class Car(object):
         self.right_msc.init()
         
         # 电机反向旋转
-        if angle > 0:
+        if turn_dir == 1:
             # 小车向右转
             self.left_msc.speed(1 * motor_speed)
             self.right_msc.speed(-1 * motor_speed)
-        elif angle < 0:
+        elif turn_dir == -1:
             self.right_msc.speed(1 * motor_speed)
             self.left_msc.speed(-1 * motor_speed)
         
         if self.is_debug:
-            print('Rotate Angle: {}, motor_speed:{}, delay_ms: {}'.format(angle, motor_speed, time_ms))
-        # 等待ms
-        utime.sleep_ms(time_ms)
-        # 小车停止
-        self.stop()
+            if turn_dir == 1:
+                print('小车右转')
+            # print('Rotate Angle: {}, motor_speed:{}, delay_ms: {}'.format(angle, motor_speed, time_ms))
+        # # 等待ms
+        # utime.sleep_ms(time_ms)
+        # # 小车停止
+        # self.stop()
     
     def stop(self):
         '''

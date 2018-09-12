@@ -10,6 +10,7 @@ from motor import Motor
 from servo import Servo
 
 if __name__ == '__main__':
+    pass
     # 初始化舵机云台
     # init_servo()
     
