@@ -1,7 +1,7 @@
 # -*- coding:utf-8 -*-
 from machine import I2C,Pin
 from car_config import gpio_dict, car_property
-from servo import CloudPlatform
+from cloud_platform import CloudPlatform
 
 # 创建一个I2C对象
 i2c = I2C(

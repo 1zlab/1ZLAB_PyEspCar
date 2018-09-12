@@ -337,7 +337,6 @@ class Car(object):
         @dir: 
             1  向左转
             -1 向右转
-         
         '''
         # 控制模式为原地旋转模式
         self.car_ctl_mode = car_property['CAR_CTL_MODE']['POINT_TURN']
@@ -466,7 +465,7 @@ class Car(object):
             # self.one_shot_timer.init(period=time_ms, mode=Timer.ONE_SHOT, callback=lambda t:self.stop())
             utime.sleep_ms(delay_ms)
             self.stop()
-
+    
     def help(self):
         '''
         TODO 打印帮助信息
@@ -481,7 +480,5 @@ class Car(object):
         '''
         self.battery_adc.deinit()
         self.user_button.deinit()
-        # mac 与 msc只需要销毁一次
-        # self.left_mac.deinit()
-        # self.right_mac.deinit()
-        # self.tmp_timer.deinit()
+        self.left_msc.deinit()
+        self.right_msc.deinit()

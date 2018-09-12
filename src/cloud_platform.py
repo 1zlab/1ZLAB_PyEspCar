@@ -78,3 +78,45 @@ class CloudPlatform:
             max_duty=car_property['TOP_SERVO_MAX_DUTY'],
             angle_range=car_property['TOP_SERVO_ANGLE_RANGE'],
             default_angle=car_property['TOP_SERVO_DEFAULT_ANGLE'])
+    
+    def down(self, delta_angle=5):
+        '''
+        云台上臂向下
+        '''
+        cur_angle = self.top_servo.angle()
+        target_angle = cur_angle - delta_angle
+
+        if target_angle >= 0:
+            self.top_servo.angle(target_angle)
+    
+    def up(self, delta_angle=5):
+        '''
+        云台上臂向上
+        '''
+        cur_angle = self.top_servo.angle()
+        target_angle = cur_angle + delta_angle
+
+        if target_angle <= self.top_servo.angle_range:
+            self.top_servo.angle(target_angle)
+    
+    def left(self, delta_angle=5):
+        '''
+        云台下臂向左
+        '''
+        cur_angle = self.bottom_servo.angle()
+        target_angle = cur_angle + delta_angle
+
+        if target_angle <= self.bottom_servo.angle_range:
+            self.bottom_servo.angle(target_angle)
+            
+    def right(self, delta_angle=5):
+        '''
+        云台下臂向右
+        '''
+        cur_angle = self.bottom_servo.angle()
+        target_angle = cur_angle - delta_angle
+
+        if target_angle >= 0:
+            self.bottom_servo.angle(target_angle)
+    
+    
