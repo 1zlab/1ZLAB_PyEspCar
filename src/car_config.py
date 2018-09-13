@@ -21,10 +21,10 @@ car_property = {
     'LEFT_MOTOR_INSTALL_DIR': False, # 左侧电机的安装方向
     'LEFT_ENCODER_IS_REVERSE': False, # 左侧编码器是否为反
     'LEFT_ENCODER_ANGLE_SCALE': 360/1320, # 编码器计数与旋转角度之间的缩放因子
-    'LEFT_MOTOR_ANGLE_CTL_KP': -11.00, # 左侧电机角度控制的PID参数
-    'LEFT_MOTOR_ANGLE_CTL_KI': -1.20,
-    'LEFT_MOTOR_ANGLE_CTL_KD': -60.00,
-    'LEFT_MOTOR_ANGLE_CTL_MAX_BIAS_SUM': 1000, # 积分上限
+    # 'LEFT_MOTOR_ANGLE_CTL_KP': -11.00, # 左侧电机角度控制的PID参数
+    # 'LEFT_MOTOR_ANGLE_CTL_KI': -1.20,
+    # 'LEFT_MOTOR_ANGLE_CTL_KD': -60.00,
+    # 'LEFT_MOTOR_ANGLE_CTL_MAX_BIAS_SUM': 1000, # 积分上限
     'LEFT_MOTOR_SPEED_CTL_KP': -10.00, # 左侧电机速度控制的PID参数 -30.0
     'LEFT_MOTOR_SPEED_CTL_KI': -0.51,
     'LEFT_MOTOR_SPEED_CTL_KD': -5.00,
@@ -33,10 +33,10 @@ car_property = {
     'RIGHT_MOTOR_INSTALL_DIR': False, # 右侧电机的安装方向
     'RIGHT_ENCODER_IS_REVERSE': False, # 右侧编码器是否为反
     'RIGHT_ENCODER_ANGLE_SCALE': 360/1320, # 编码器计数与旋转角度之间的缩放因子
-    'RIGHT_MOTOR_ANGLE_CTL_KP': -11.00, # 右侧电机角度控制的PID参数
-    'RIGHT_MOTOR_ANGLE_CTL_KI': -1.20,
-    'RIGHT_MOTOR_ANGLE_CTL_KD': -60.00,
-    'RIGHT_MOTOR_ANGLE_CTL_MAX_BIAS_SUM': 1000, # 积分上限
+    # 'RIGHT_MOTOR_ANGLE_CTL_KP': -11.00, # 右侧电机角度控制的PID参数
+    # 'RIGHT_MOTOR_ANGLE_CTL_KI': -1.20,
+    # 'RIGHT_MOTOR_ANGLE_CTL_KD': -60.00,
+    # 'RIGHT_MOTOR_ANGLE_CTL_MAX_BIAS_SUM': 1000, # 积分上限
     'RIGHT_MOTOR_SPEED_CTL_KP': -10.00, # 左侧电机速度控制的PID参数 -30.0
     'RIGHT_MOTOR_SPEED_CTL_KI': -0.51,
     'RIGHT_MOTOR_SPEED_CTL_KD': -5.00,

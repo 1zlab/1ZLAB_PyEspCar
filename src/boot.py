@@ -1,3 +1,12 @@
+
+def is_legal_wifi(essid, password):
+    '''
+    判断WIFI密码是否合法
+    '''
+    if len(essid) == 0 or len(password) == 0:
+        return False
+    return True
+
 def do_connect():
     import json
     import network
@@ -10,12 +19,21 @@ def do_connect():
             config = json.loads(f.read())
     # 若初次运行,则将进入excpet,执行配置文件的创建        
     except:
-        essid = input('wifi name:') # 输入essid
-        password = input('wifi passwrod:') # 输入password
-        config = dict(essid=essid, password=password) # 创建字典
-        with open('wifi_config.json','w') as f:
-            f.write(json.dumps(config)) # 将字典序列化为json字符串,存入wifi_config.json
-            
+        essid = ''
+        password = ''
+
+        while True:
+            essid = input('wifi name:') # 输入essid
+            password = input('wifi passwrod:') # 输入password
+
+            if is_legal_wifi(essid, password):
+                config = dict(essid=essid, password=password) # 创建字典
+                with open('wifi_config.json','w') as f:
+                    f.write(json.dumps(config)) # 将字典序列化为json字符串,存入wifi_config.json
+                break
+            else:
+                print('ERROR, Please Input Right WIFI')
+    
     #以下为正常的WIFI连接流程        
     wifi = network.WLAN(network.STA_IF)  
     if not wifi.isconnected(): 

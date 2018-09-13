@@ -1,5 +1,7 @@
 '''
 小车串口调试电机速度控制
+
+TODO 移动这个文件夹, 这个其实不属于基础工程里面的
 '''
 import micropython
 from  machine import Pin,Timer,UART

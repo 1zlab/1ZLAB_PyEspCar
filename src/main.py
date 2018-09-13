@@ -44,3 +44,6 @@ if __name__ == '__main__':
     # exec(open('test_car.py').read(), globals())
     # 小车前进1m
     # car.move(1)
+
+    # 测试串口液晶屏
+    # exec(open('uart_screen.py').read(), globals())
