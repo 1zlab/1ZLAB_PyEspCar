@@ -1,3 +1,7 @@
+import sys
+
+# 添加路径
+sys.path.append('examples')
 
 def is_legal_wifi(essid, password):
     '''
