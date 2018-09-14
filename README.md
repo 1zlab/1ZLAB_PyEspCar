@@ -13,7 +13,7 @@
 
 下图是我们的**PyESPCar V2.1**版本的实物图, 舵机云台上面挂载了手机, 可以通过手机WIFI传图, 然后在PC上用OpenCV做图像处理, 然后PC发送控制指令给PyESPCar WIFI小车. 
 
-![0914_1](/home/zr/Project/PyEspCar/image/0914_1.jpg)
+![0914_1](./image/0914_1.jpg)
 
 
 
