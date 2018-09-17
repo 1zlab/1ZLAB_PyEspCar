@@ -28,7 +28,7 @@ from user_button import UserButton
 from motor import Motor
 from encoder import Encoder
 from pid_motor import MotorSpeedControl
-from servo import CloudPlatform
+from cloud_platform import CloudPlatform
 
 class Pose:
     '''
@@ -118,7 +118,6 @@ class Car(object):
             kp = car_property['LEFT_MOTOR_SPEED_CTL_KP'],
             ki = car_property['LEFT_MOTOR_SPEED_CTL_KI'],
             kd = car_property['LEFT_MOTOR_SPEED_CTL_KD'],
-            max_bias_sum = car_property['LEFT_MOTOR_SPEED_CTL_MAX_BIAS_SUM'], 
             is_debug=False)
         
         # 右侧电机速度控制
@@ -128,7 +127,6 @@ class Car(object):
             kp = car_property['RIGHT_MOTOR_SPEED_CTL_KP'],
             ki = car_property['RIGHT_MOTOR_SPEED_CTL_KI'],
             kd = car_property['RIGHT_MOTOR_SPEED_CTL_KD'],
-            max_bias_sum = car_property['RIGHT_MOTOR_SPEED_CTL_MAX_BIAS_SUM'],
             is_debug=False)
         
         # # 左侧电机的角度控制
@@ -447,8 +445,8 @@ class Car(object):
         right_motor_angle_target = self.velocity_to_motor_angle(right_velocity)
         
         # 设定Target值
-        self.left_msc.speed(left_motor_angle_target, target_posi = left_target_posi)
-        self.right_msc.speed(right_motor_angle_target, target_posi = right_target_posi)
+        self.left_msc.speed(left_motor_angle_target)
+        self.right_msc.speed(right_motor_angle_target)
 
         if self.is_debug:
             print('Left Motor Speed Control : {}'.format(left_motor_angle_target))
@@ -498,8 +496,8 @@ if __name__ == '__main__':
     car = Car(is_debug=True)
 
     # 停止 只测速不驱动电机
-    car.left_msc.stop_flag = True
-    car.right_msc.stop_flag = True
+    # car.left_msc.stop_flag = True
+    # car.right_msc.stop_flag = True
 
     # 创建定时器 这里用的是定时器4
     timer = Timer(4)

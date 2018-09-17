@@ -1,13 +1,8 @@
 '''
 程序入口
-
-注：目前各个子功能还在开发中，暂时还没有合并在一起。
 '''
 from machine import Pin
 import utime
-from car_config import gpio_dict
-from motor import Motor
-from servo import Servo
 
 if __name__ == '__main__':
     pass
@@ -32,7 +27,7 @@ if __name__ == '__main__':
     # exec(open('test_uart_left_mac.py').read(), globals())
 
     # 测试电机角度控制
-    # exec(open('test_left_mac.py').read(), globals())
+    # exec(open('libs/pid_motor.py').read(), globals())
 
     # 测试电机转速PID控制
     # exec(open('test_motor_speed_pid.py').read(), globals())

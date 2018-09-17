@@ -25,10 +25,9 @@ car_property = {
     # 'LEFT_MOTOR_ANGLE_CTL_KI': -1.20,
     # 'LEFT_MOTOR_ANGLE_CTL_KD': -60.00,
     # 'LEFT_MOTOR_ANGLE_CTL_MAX_BIAS_SUM': 1000, # 积分上限
-    'LEFT_MOTOR_SPEED_CTL_KP': -10.00, # 左侧电机速度控制的PID参数 -30.0
-    'LEFT_MOTOR_SPEED_CTL_KI': -0.51,
-    'LEFT_MOTOR_SPEED_CTL_KD': -5.00,
-    'LEFT_MOTOR_SPEED_CTL_MAX_BIAS_SUM': 1000, # 积分上限
+    'LEFT_MOTOR_SPEED_CTL_KP': -0, # 左侧电机速度控制的PID参数 -30.0
+    'LEFT_MOTOR_SPEED_CTL_KI': -2,
+    'LEFT_MOTOR_SPEED_CTL_KD': 0,
     
     'RIGHT_MOTOR_INSTALL_DIR': False, # 右侧电机的安装方向
     'RIGHT_ENCODER_IS_REVERSE': False, # 右侧编码器是否为反
@@ -37,10 +36,9 @@ car_property = {
     # 'RIGHT_MOTOR_ANGLE_CTL_KI': -1.20,
     # 'RIGHT_MOTOR_ANGLE_CTL_KD': -60.00,
     # 'RIGHT_MOTOR_ANGLE_CTL_MAX_BIAS_SUM': 1000, # 积分上限
-    'RIGHT_MOTOR_SPEED_CTL_KP': -10.00, # 左侧电机速度控制的PID参数 -30.0
-    'RIGHT_MOTOR_SPEED_CTL_KI': -0.51,
-    'RIGHT_MOTOR_SPEED_CTL_KD': -5.00,
-    'RIGHT_MOTOR_SPEED_CTL_MAX_BIAS_SUM': 1000, # 设置积分上限
+    'RIGHT_MOTOR_SPEED_CTL_KP': -0, # 左侧电机速度控制的PID参数 -30.0
+    'RIGHT_MOTOR_SPEED_CTL_KI': -2,
+    'RIGHT_MOTOR_SPEED_CTL_KD': -0,
 
     'CAR_ONE_SHOT_TIMER_ID': 2, # 单次计时器的ID
 
@@ -93,5 +91,8 @@ gpio_dict = {
     "I2C_SDA": 4, # 用户IIC SDA
 
     "SERVO_1": 27, # 舵机1
-    "SERVO_2": 12 # 舵机2
+    "SERVO_2": 12, # 舵机2
+
+    "LED1": 2, # 安信可板载LED
+    "LED2": 13, # PyESPCar底板LED
 }

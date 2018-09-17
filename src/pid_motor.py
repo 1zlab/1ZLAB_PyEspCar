@@ -2,7 +2,7 @@
 电机的PID控制(角度，速度)
 '''
 from machine import Timer
-from pid import PID
+from pid import IncrementalPID
 from car_config import car_property
 
 # class MotorAngleControl(object):
@@ -101,46 +101,41 @@ from car_config import car_property
 
 class MotorSpeedControl(object):
     '''电机速度PID控制'''
-    def __init__(self, motor, encoder, kp, ki=0, kd=0, is_debug=False, max_bias_sum=None):
+    def __init__(self, motor, encoder, kp, ki=0, kd=0, is_debug=False):
         self.motor = motor # 电机
         self.encoder = encoder # 编码器
         self.encoder.position = 0 # 编码器初始化
-        # self.old_encoder_pos = self.encoder.position # 上一个时刻编码器的读数
 
-        self.pid = PID(kp, ki, kd, max_bias_sum=max_bias_sum) # 创建PID对象
+        self.pid = IncrementalPID(kp, ki, kd, min_result=-1023, max_result=1023) # 创建PID对象
         self._speed = 0 # 电机旋转速度
 
-        self.is_debug = is_debug
-        
         self.stop_flag = False
-        # if self.is_debug:
+        self.is_debug = is_debug
         self._iteration = 0 # PID迭代次数
 
     def init(self):
         '''
         重新初始化
         '''
-        self.encoder.position = 0
-        self.pid.bias_sum = 0
-        self.pid.cur_bias = 0
+        self.encoder.position = 0        
         self._iteration = 0
-        self.pid.set_target_value(0)
+        # 重新初始化PID
+        self.pid.reset()
         
-    def speed(self, target_speed=None, target_posi=None):
+    def speed(self, value=None):
         '''
         设置速度
         '''
-        if target_speed is None:
+        if value is None:
             # 返回当前的速度
             return self._speed
         # 规约target ,计算控制周期内电机最大的target
         max_target = int(car_property['MOTOR_MAX_ANGLE']*car_property['PID_CTL_PERIOD'])
-        if abs(target_speed) > max_target:
-            target_speed = max_target if target_speed > 0 else -1 * max_target 
+        if abs(value) > max_target:
+            value = max_target if value > 0 else -1 * max_target 
+        
         # 设置pid目标值
-        self.pid.set_target_value(target_speed) 
-
-        self.target_posi = target_posi # 设置编码器的目标值
+        self.pid.target(value)
 
     def is_legal_speed(self, encoder_value):
         '''
@@ -172,6 +167,7 @@ class MotorSpeedControl(object):
         if not self.stop_flag:
             self.motor.pwm(int(pwm))
         else:
+            # 电机停止旋转
             self.motor.pwm(0)
 
         if self.is_debug:
@@ -179,8 +175,9 @@ class MotorSpeedControl(object):
             if self._iteration > 4:
                 # 1s 打印一次
                 self._iteration = 0
-                print("Target: {} RealValue: {} PID Result: {}".format(self.pid.target_value, self._speed, pwm))
+                print("Target: {} RealValue: {} PID Result: {}".format(self.pid.target(), self._speed, pwm))
                 print('PWM: {}'.format(pwm))
+    
     def deinit(self):
         self.encoder.deinit()
         self.motor.deinit()
@@ -225,14 +222,16 @@ if __name__ == '__main__':
         scale=car_property['LEFT_ENCODER_ANGLE_SCALE'])
 
     # 左侧电机速度控制PID
-    kp = car_property['LEFT_MOTOR_SPEED_CTL_KP']
-    ki = car_property['LEFT_MOTOR_SPEED_CTL_KI']
-    kd = car_property['LEFT_MOTOR_SPEED_CTL_KD']
+    # kp = car_property['LEFT_MOTOR_SPEED_CTL_KP']
+    # ki = car_property['LEFT_MOTOR_SPEED_CTL_KI']
+    # kd = car_property['LEFT_MOTOR_SPEED_CTL_KD']
+
+    kp = 0
+    ki = -10
+    kd = 0
 
     left_msc = MotorSpeedControl(left_motor, left_encoder, 
-            kp = kp, ki = ki, kd = kd,
-            max_bias_sum=car_property['LEFT_MOTOR_SPEED_CTL_MAX_BIAS_SUM'],
-            is_debug=False)
+            kp = kp, ki = ki, kd = kd,is_debug=False)
 
     def btn_callback(pin):
         '''
@@ -261,13 +260,13 @@ if __name__ == '__main__':
     timer.init(period=25, mode=Timer.PERIODIC, callback=callback)
 
     # 设置左侧电机转速
-    left_msc.speed(40)
+    left_msc.speed(0.5)
 
     # 按下用户按键，可以查看PID控制的日志
 
-    try:
-        while True:
-            pass
-    except:
-        timer.deinit()
-        left_speed_pid.deinit()
+    # try:
+    #     while True:
+    #         pass
+    # except:
+    #     timer.deinit()
+    #     left_msc.deinit()
