@@ -24,11 +24,12 @@ from machine import Pin,Timer,I2C
 
 from car_config import car_property, gpio_dict
 from battery_voltage import BatteryVoltage
-from user_button import UserButton
+from button import Button
 from motor import Motor
 from encoder import Encoder
 from pid_motor import MotorSpeedControl
 from cloud_platform import CloudPlatform
+import gc
 
 class Pose:
     '''
@@ -71,9 +72,9 @@ class Car(object):
             is_debug=False)
         
         # 用户按键
-        self.user_button = UserButton(
-            gpio_dict['USER_BUTTON'], 
-            callback=lambda timer: self.user_button_callback(timer))
+        self.user_button = Button(
+            0, 
+            callback=lambda pin: self.user_button_callback(pin))
         
         # 创建一个I2C对象
         i2c = I2C(
@@ -103,13 +104,15 @@ class Car(object):
             Pin(gpio_dict['LEFT_ENCODER_A'], Pin.IN),
             Pin(gpio_dict['LEFT_ENCODER_B'], Pin.IN),
             reverse=car_property['LEFT_ENCODER_IS_REVERSE'], 
-            scale=car_property['LEFT_ENCODER_ANGLE_SCALE'])
+            scale=car_property['LEFT_ENCODER_ANGLE_SCALE'],
+            motor=self.left_motor)
         # 右侧编码器
         self.right_encoder = Encoder(
             Pin(gpio_dict['RIGHT_ENCODER_A'], Pin.IN),
             Pin(gpio_dict['RIGHT_ENCODER_B'], Pin.IN),
             reverse=car_property['RIGHT_ENCODER_IS_REVERSE'], 
-            scale=car_property['RIGHT_ENCODER_ANGLE_SCALE'])
+            scale=car_property['RIGHT_ENCODER_ANGLE_SCALE'],
+            motor=self.right_motor)
         
         # 左侧电机速度控制
         self.left_msc = MotorSpeedControl(
@@ -157,7 +160,7 @@ class Car(object):
         
         # 执行单次的计时器
         # self.one_shot_timer = Timer(car_property['CAR__ID'])
-
+    
     def user_button_callback(self, pin):
         '''
         切换小车的停止位
@@ -168,10 +171,11 @@ class Car(object):
         self.stop_flag = not self.stop_flag
 
         if self.stop_flag:
-            # 电机停止
-            self.left_motor.stop()
-            self.right_motor.stop()
-        
+            # # 电机停止
+            # self.left_motor.stop()
+            # self.right_motor.stop()
+            self.stop()
+
         if self.is_debug:
             print('切换stopflag flag={}'.format(self.stop_flag))
     
@@ -225,11 +229,21 @@ class Car(object):
         '''
         小车PID控制回调函数
         '''
+        # 垃圾释放
+        # gc.collect()
+        
         # 电池ADC采样回调
         self.battery_adc.callback(timer)
+
+        # if not self.stop_flag:
         # 回调函数
         self.left_msc.callback(timer)
         self.right_msc.callback(timer)
+        
+        # TODO 测试走直线
+        car_pwm = int((self.left_msc.target_pwm + self.right_msc.target_pwm)/2)
+        self.left_motor.pwm(car_pwm)
+        self.right_motor.pwm(car_pwm)
         
         # 更新当前的位姿
         self.update_pose()
@@ -374,9 +388,10 @@ class Car(object):
         # # 自动切换为停止模式
         # self.car_ctl_mode = car_property['CAR_CTL_MODE']['STOP']
         self.speed(0)
-        # self.left_mac.init()
-        # self.right_mac.init()
-        
+        # 设置PWM的值为0
+        self.left_msc.pid.result = 0
+        self.right_msc.pid.result = 0
+
         if self.is_debug:
             print('Car Stop')
     
@@ -480,29 +495,3 @@ class Car(object):
         self.user_button.deinit()
         self.left_msc.deinit()
         self.right_msc.deinit()
-
-
-if __name__ == '__main__':
-
-    import micropython
-    from machine import Timer
-    from car_config import car_property
-    # from car import Car
-
-    # 设定紧急意外缓冲区的大小为100
-    micropython.alloc_emergency_exception_buf(100)
-
-    # 创建一个小车
-    car = Car(is_debug=True)
-
-    # 停止 只测速不驱动电机
-    # car.left_msc.stop_flag = True
-    # car.right_msc.stop_flag = True
-
-    # 创建定时器 这里用的是定时器4
-    timer = Timer(4)
-    # 设置定时器回调 100ms执行一次
-    ctl_period = int(car_property['PID_CTL_PERIOD']*1000) # 控制周期，转换为ms
-
-    timer.init(period=ctl_period, mode=Timer.PERIODIC, callback=lambda t: car.callback(t))
-

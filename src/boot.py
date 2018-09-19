@@ -1,13 +1,15 @@
 import sys
 
+# from led import LED
+
 # 添加路径
-sys.path.append('examples')
+# sys.path.append('examples')
 
 def is_legal_wifi(essid, password):
     '''
     判断WIFI密码是否合法
     '''
-    if len(essid) == 0 or len(password) == 0:
+    if len(essid) == 0:
         return False
     return True
 
@@ -46,6 +48,10 @@ def do_connect():
         wifi.connect(config['essid'], config['password']) 
         import utime
 
+        # 创建一个LED
+        # led = LED(1)
+        # led.on()
+
         for i in range(200):
             print('第{}次尝试连接WIFI热点'.format(i))
             if wifi.isconnected():
@@ -63,8 +69,15 @@ def do_connect():
                 pass
             do_connect() # 重新连接
         else:
+            # led.off() # 关闭LED
+            # led.deinit() # 销毁LED资源
             print('network config:', wifi.ifconfig()) 
 
+
+def start_ap():
+    '''开启AP模式'''
+    pass
+    
 if __name__ == '__main__':
     do_connect()
     import webrepl

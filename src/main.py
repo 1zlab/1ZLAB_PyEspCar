@@ -6,6 +6,7 @@ import utime
 
 if __name__ == '__main__':
     pass
+    # exec(open('car.py').read(), globals())
     # 初始化舵机云台
     # init_servo()
     
@@ -16,7 +17,10 @@ if __name__ == '__main__':
     # 设定程序执行入口
 
     # 测试舵机
-    # exec(open('test_servo.py').read(), globals())
+    
+    # 测试最大速度
+    # exec(open('test_max_speed.py').read(), globals())
+    
     # 测试电机旋转
     # exec(open('test_motor.py').read(), globals())
 
@@ -27,7 +31,7 @@ if __name__ == '__main__':
     # exec(open('test_uart_left_mac.py').read(), globals())
 
     # 测试电机角度控制
-    # exec(open('libs/pid_motor.py').read(), globals())
+    # exec(open('pid_motor.py').read(), globals())
 
     # 测试电机转速PID控制
     # exec(open('test_motor_speed_pid.py').read(), globals())
@@ -42,3 +46,5 @@ if __name__ == '__main__':
 
     # 测试串口液晶屏
     # exec(open('uart_screen.py').read(), globals())
+    
+    # exec(open('gy25.py').read(), globals())

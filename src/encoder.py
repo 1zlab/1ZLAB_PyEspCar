@@ -4,23 +4,39 @@ AB相正交编码器类
 from machine import Pin
 
 class Encoder(object):
-    def __init__(self, pin_x, pin_y, reverse, scale):
+    def __init__(self, pin_x, pin_y, reverse, scale, motor=None, is_four_freq=False):
         self.reverse = reverse
         self.scale = scale
         self.forward = True
         self.pin_x = pin_x
         self.pin_y = pin_y
         self._pos = 0
-        self.x_interrupt = pin_x.irq(trigger=Pin.IRQ_RISING | Pin.IRQ_FALLING, handler=self.x_callback)
-        self.y_interrupt = pin_y.irq(trigger=Pin.IRQ_RISING | Pin.IRQ_FALLING, handler=self.y_callback)
-    
+
+        if is_four_freq:
+            self.x_interrupt = pin_x.irq(trigger=Pin.IRQ_RISING | Pin.IRQ_FALLING, handler=self.x_callback)
+            self.y_interrupt = pin_y.irq(trigger=Pin.IRQ_RISING | Pin.IRQ_FALLING, handler=self.y_callback)
+        else:
+            self.x_interrupt = pin_x.irq(trigger=Pin.IRQ_RISING, handler=self.x_callback)
+        self.motor = motor
     def x_callback(self, line):
-        self.forward = self.pin_x.value() ^ self.pin_y.value() ^ self.reverse
-        self._pos += 1 if self.forward else -1
+        if self.motor is not None:
+            if self.motor.pwm() > 0:
+                self._pos += 1
+            else:
+                self._pos -= 1
+        else:
+            self.forward = self.pin_x.value() ^ self.pin_y.value() ^ self.reverse
+            self._pos += 1 if self.forward else -1
 
     def y_callback(self, line):
-        self.forward = self.pin_x.value() ^ self.pin_y.value() ^ self.reverse ^ 1
-        self._pos += 1 if self.forward else -1
+        if self.motor is not None:
+            if self.motor.pwm() > 0:
+                self._pos += 1
+            else:
+                self._pos -= 1
+        else:
+            self.forward = self.pin_x.value() ^ self.pin_y.value() ^ self.reverse ^ 1
+            self._pos += 1 if self.forward else -1
 
     @property
     def position(self):
@@ -96,10 +112,11 @@ if __name__ == '__main__':
     # 3s 打印一次数据
     timer.init(period=1000, mode=Timer.PERIODIC, callback=callback)
 
-    while True:
-        try:
-            pass
-        except:
-            # 释放资源
-            left_encoder.deinit()
-            right_encoder.deinit()
+
+    def quit():
+        # 释放资源
+        timer.deinit()
+        left_encoder.deinit()
+        right_encoder.deinit()
+
+    # TODO 添加另外一个退出按键， 执行quit函数

@@ -39,7 +39,7 @@ class Motor:
         else:
             self.pwm(0)
         
-    def pwm(self, value=None):
+    def pwm(self, value=None, dead_block=100):
         '''
         获取设置小车的速度
         pwm的范围在 -1023到1023之间 自动放缩
@@ -48,6 +48,11 @@ class Motor:
             return self._pwm
         
         value = int(value)
+
+        # 添加电机死区保护
+        if abs(value) < dead_block:
+            value = 0
+        
         if abs(value) > 1023:
             # 判断pwm的绝对值是否越界
             value = 1023 if value > 0 else -1023
