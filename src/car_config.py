@@ -6,6 +6,9 @@ car_property = {
     'CAR_WIDTH': 0.17667, # 小车的后轮轮距离，单位m
     'CAR_LENGTH': 0.15300, # 小车前后轮轮距，单位m
     'WHEEL_RADIUS': 0.0325, # 轮胎半径，单位m
+    'WHEEL_TAKE_A_CIRCLE_PULSE': 330, # 电机旋转一周对应的脉冲数量 TODO delete
+    'MOTOR_REDUNCTION_GEAR_RATIO': 30/1, # 电机减速比
+    'ENCODER_RESOLUTION': 11, # 编码器分辨率： 电机旋转一周对应的脉冲数
 
     'CAR_CTL_MODE' :{ # 小车控制模式
         'SPEED': 1, # 速度控制(同时控制 speed与旋转角度)
@@ -13,8 +16,9 @@ car_property = {
         'GO_STRAIGHT': 3, # 走直线
         'POINT_TURN': 4, # 原地旋转
     },
-    'PWM_FREQUENCY': 1000, # 电机控制与舵机控制的PWM
+    'MOTOR_PWM_FREQUENCY': 1000, # 电机控制与舵机控制的PWM
                             # 推荐频率 500Hz - 30000HZ
+    'MOTOR_MAX_PWM':  1023, 
     'PID_CTL_PERIOD': 0.010, # PID控制周期 单位s 0.010
     'CAR_MAX_SPEED': 1.25, # 小车的最大直线速度, m/s
     'MOTOR_MAX_ANGLE': 2600, # 25ms内,电机最多转65度 1s -> 65 * 40

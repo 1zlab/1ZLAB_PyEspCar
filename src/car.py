@@ -76,15 +76,19 @@ class Car(object):
             0, 
             callback=lambda pin: self.user_button_callback(pin))
         
-        # 创建一个I2C对象
-        i2c = I2C(
-            scl=Pin(gpio_dict['I2C_SCL']),
-            sda=Pin(gpio_dict['I2C_SDA']),
-            freq=car_property['I2C_FREQUENCY'])
-
-        # 创建舵机云台对象
-        self.cloud_platform = CloudPlatform(i2c)
-
+        # TODO 暂时注释掉
+        try:
+            # 创建一个I2C对象
+            i2c = I2C(
+                scl=Pin(gpio_dict['I2C_SCL']),
+                sda=Pin(gpio_dict['I2C_SDA']),
+                freq=car_property['I2C_FREQUENCY'])
+            # 创建舵机云台对象
+            self.cloud_platform = CloudPlatform(i2c)
+        except:
+            print('[ERROR]: pca9885舵机驱动模块初始化失败')
+            print('[Hint]: 请检查接线')
+        
         # 左侧电机
         self.left_motor = Motor(
             gpio_dict['LEFT_MOTOR_A'],
@@ -218,7 +222,13 @@ class Car(object):
 
         # 更新小车的偏转角度 (弧度值)
         self.pose.theta += delta_theta
-
+        # TODO 约束theta
+        if self.pose.theta > math.pi:
+            self.pose.theta -= math.pi
+        
+        elif self.pose.theta < -math.pi:
+            self.pose.theta += math.pi
+        
         # 更新小车的坐标(M点的轨迹方程)
         self.pose.x += -1*(v_left + v_right) * math.sin(self.pose.theta)
         self.pose.y += (v_left + v_right) * math.cos(self.pose.theta)
@@ -240,11 +250,15 @@ class Car(object):
         self.left_msc.callback(timer)
         self.right_msc.callback(timer)
         
-        # TODO 测试走直线
-        car_pwm = int((self.left_msc.target_pwm + self.right_msc.target_pwm)/2)
-        self.left_motor.pwm(car_pwm)
-        self.right_motor.pwm(car_pwm)
-        
+        if not self.stop_flag:
+            # TODO 测试走直线 so left = right
+            car_pwm = int((self.left_msc.target_pwm + self.right_msc.target_pwm)/2)
+            self.left_motor.pwm(car_pwm)
+            self.right_motor.pwm(car_pwm)
+        else:
+            # Do Nothing
+            pass
+
         # 更新当前的位姿
         self.update_pose()
         

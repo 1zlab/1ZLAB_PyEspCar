@@ -1,3 +1,6 @@
+'''
+测试位姿推算
+'''
 import micropython
 from machine import Timer
 from car_config import car_property
@@ -9,11 +12,8 @@ micropython.alloc_emergency_exception_buf(100)
 
 # 创建一个小车
 car = Car(is_debug=True)
-
-# 停止 只测速不驱动电机
-# car.stop_flag = True
-# car.left_msc.stop_flag = True
-# car.right_msc.stop_flag = True
+# 停止标志位
+car.stop_flag = True
 
 # 创建定时器 这里用的是定时器4
 timer = Timer(5)
@@ -31,15 +31,10 @@ def quit():
     gc.collect()
 
 
-car.speed(0.5)
+def callback(pin):
+    global car
+    print('Pose: {}'.format(car.pose))
 
-print('Run')
-while True:
-    if car.pose.y >= 100:
-        print('Move 1m')
-        car.stop()
-        break
-    utime.sleep_ms(50)
+# 修改回调函数
+car.user_button.irq_handler = callback
 
-print('Stop')
-print('Pose: {}'.format(car.pose))

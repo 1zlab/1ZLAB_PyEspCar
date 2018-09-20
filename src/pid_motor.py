@@ -7,13 +7,10 @@ TODO 增量式PID 速度减到0的时候， PWM可能处在电机的死区位置
 
 
 '''
-
 from machine import Timer
-
 from pid import IncrementalPID
-
 from car_config import car_property
-
+import math
 
 
 class MotorSpeedControl(object):
@@ -30,6 +27,13 @@ class MotorSpeedControl(object):
         self.is_debug = is_debug
         self._iteration = 0 # PID迭代次数
         self.target_pwm = 0
+        self.max_speed = 0
+        self.set_max_speed()
+
+    def set_max_speed(self):
+        self.max_speed = car_property['CAR_MAX_SPEED'] / (2*math.pi*car_property['WHEEL_RADIUS'])
+        self.max_speed *= car_property['WHEEL_TAKE_A_CIRCLE_PULSE']
+        self.max_speed *= car_property['PID_CTL_PERIOD']
 
     def init(self):
         '''
@@ -62,6 +66,11 @@ class MotorSpeedControl(object):
         '''
         判断编码器的速度是否合理
         '''
+        if self.motor.pwm() > 0 and encoder_value > self.max_speed:
+            return False
+        elif self.motor.pwm() < 0 and encoder_value < -self.max_speed:
+            return False
+        
         return True
         
 
