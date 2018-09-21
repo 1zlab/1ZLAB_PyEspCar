@@ -8,8 +8,15 @@ config = {
     # PID控制通用配置
     'PID_CTL_PERIOD': 0.010, # PID控制周期 单位s 0.010
     
+    # 电池电压采样
+    'BATTERY_ADC_GPIO': 'X5', # 电压采样的GPIO  ESP32->SVP
+    'BATTERY_ADC_SAMPLE_PERIOD': 100, # 电池采样的周期（均值）
+    'BATTERY_OVER_DISCHARGE_VOLT': 11.0, # 电池过放的参考电压值
+    'BATTERY_ADC_RESOLUTION': 4096, # 满量程的读数
+    'BATTERY_ADC_SCALAR': 11, # 电池电压缩放因子
+
     # 用户按键
-    'USER_BUTTON': 39, # 用户按键(SVN) ESP32 -> 39
+    'USER_BUTTON': 0, # PyBoard自带用户按键， Switch()
     
     # 电机通用配置
     'MOTOR_PWM_FREQUENCY': 1000, # 电机控制的PWM, 推荐频率 500Hz - 30000HZ
