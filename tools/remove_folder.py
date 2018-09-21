@@ -5,8 +5,9 @@ Micro-Python ESP32
 '''
 import os
 
-
-file_list = os.listdir()
+# 目标文件夹位置
+folder_name = './.Trash-1000'
+file_list = os.listdir(folder_name)
 
 def is_folder(fname):
     '''
@@ -16,8 +17,7 @@ def is_folder(fname):
         return False
     return True
 
-# 目标文件夹位置
-folder_name = './libs'
+
 
 for fname in file_list:
     if is_folder(fname):
