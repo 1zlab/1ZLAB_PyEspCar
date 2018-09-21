@@ -4,10 +4,7 @@
 from machine import Pin
 
 # PyCar配置文件
-config = {
-    # PID控制通用配置
-    'PID_CTL_PERIOD': 0.010, # PID控制周期 单位s 0.010
-    
+config = {    
     # 电池电压采样
     'BATTERY_ADC_GPIO': 'X5', # 电压采样的GPIO  ESP32->SVP
     'BATTERY_ADC_SAMPLE_PERIOD': 100, # 电池采样的周期（均值）
@@ -23,16 +20,17 @@ config = {
     'MOTOR_PWM_MAX_DUTY':  84000, # 电机PWM信号占空比的最大取值
     'MOTOR_PWM_MAX_DUTY_PERCENT': 100, # 电机PWM占空比 （百分比）
     'MOTOR_REDUNCTION_GEAR_RATIO': 30/1, # 电机减速比
-    
+    'MOTOR_SPEED_PID_CTL_PERIOD': 0.010, # 电机速度控制PID控制周期
+
     # 左侧电机
     'LEFT_MOTOR_A_GPIO': 'X3', # 左侧电机A相 ESP32 -> 32
     'LEFT_MOTOR_B_GPIO': 'X4', # 左侧电机B相 ESP32 -> 33
     'LEFT_MOTOR_TIMER_ID': 5, 
     'LEFT_MOTOR_A_CHANNEL': 3,
     'LEFT_MOTOR_B_CHANNEL': 4,
-    'LEFT_MOTOR_IS_REVERSE': True, # 左侧电机的安装方向
+    'LEFT_MOTOR_IS_REVERSE': False, # 左侧电机的安装方向
     'LEFT_MOTOR_SPEED_CTL_KP': -10, # 左侧电机速度控制的PID参数 Kp
-    'LEFT_MOTOR_SPEED_CTL_KI': -2,  # 左侧电机速度控制的PID参数 Ki
+    'LEFT_MOTOR_SPEED_CTL_KI': -20,  # 左侧电机速度控制的PID参数 Ki
     'LEFT_MOTOR_SPEED_CTL_KD': 0,   # 左侧电机速度控制的PID参数 Kd
 
     # 右侧电机
@@ -42,7 +40,7 @@ config = {
     'RIGHT_MOTOR_A_CHANNEL': 1,
     'RIGHT_MOTOR_B_CHANNEL': 2,
     'RIGHT_MOTOR_IS_REVERSE': False, # 右侧电机的安装方向
-    'RIGHT_MOTOR_SPEED_CTL_KP': -10, # 左侧电机速度控制的PID参数 kp
+    'RIGHT_MOTOR_SPEED_CTL_KP': -20, # 左侧电机速度控制的PID参数 kp
     'RIGHT_MOTOR_SPEED_CTL_KI': -2,  # 左侧电机速度控制的PID参数 ki
     'RIGHT_MOTOR_SPEED_CTL_KD': -0,  # 左侧电机速度控制的PID参数 kd
 

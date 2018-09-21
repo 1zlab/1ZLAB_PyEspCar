@@ -15,13 +15,14 @@ class PID:
         self.pre_bias = 0  # 上一次的误差 err_k-1
         self.result = 0 # 被控制量
         
-        
-    def target(self, value=None):
-        '''获取或设置PID'''
-        if value is None:
-            return self._target
-        self._target = value
+    @property
+    def target(self):
+        return self._target
     
+    @target.setter
+    def target(self, value):
+        self._target = value
+        
     def reset(self):
         '''重新初始化PID'''
         pass

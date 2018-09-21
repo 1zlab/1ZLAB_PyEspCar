@@ -85,4 +85,4 @@ class BatteryVoltage(object):
         备注 ADC没有deinit方法
         '''
         # 释放ADC资源
-        pass
+        del(self)

@@ -49,34 +49,31 @@ class Encoder(object):
         # 编码器分辨率： 电机旋转一周对应的脉冲数
         self.encoder_resolution = config['ENCODER_RESOLUTION']
         
+         # 电机旋转一圈对应的脉冲
+        self.one_circle_pulse = self.encoder_resolution * self.motor_reduction_gear_ratio
+        if self.is_quad_freq:
+            # 如果开启四倍频就*4
+            self.one_circle_pulse *= 4
+
+
         self.reverse = reverse
 
         self.angle_scale = 0 # 编码器脉冲计数与电机旋转角度之间的缩放因子
         self.set_angle_scale()
         self.distance_scale = 0 # 编码器脉冲计数与电机前进距离之间的缩放因子
         self.set_distance_scale()
-        
+    
+
+
     def set_angle_scale(self):
         '''设置编码器脉冲计数与电机旋转角度之间的比例因子'''
-        # 电机旋转一圈对应的脉冲
-        one_circle_pulse = self.encoder_resolution * self.motor_reduction_gear_ratio
-        if self.is_quad_freq:
-            # 如果开启四倍频就*4
-            one_circle_pulse *= 4
-        
         # 计算一个脉冲相当于多少度
-        self.angle_scale = 360 / one_circle_pulse
+        self.angle_scale = 360 / self.one_circle_pulse
 
     def set_distance_scale(self):
         '''设置编码器脉冲计数与电机前进距离之间的比例因子'''
-        # 电机旋转一圈对应的脉冲
-        one_circle_pulse = self.encoder_resolution * self.motor_reduction_gear_ratio
-        if self.is_quad_freq:
-            # 如果开启四倍频就*4
-            one_circle_pulse *= 4
-        
         # 计算一个脉冲相当于前进了多少米
-        self.distance_scale = ( 2 * math.pi * self.CAR_WHEEL_RADIUS) / one_circle_pulse
+        self.distance_scale = ( 2 * math.pi * self.CAR_WHEEL_RADIUS) / self.one_circle_pulse
 
     @property
     def counter(self):
@@ -121,7 +118,6 @@ class Encoder(object):
     def distance(self, value):
         self.counter = value // self.distance_scale
     
-
     def reset(self):
         '''重置编码器'''
         self.counter = 0
