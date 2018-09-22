@@ -5,9 +5,7 @@ Micro-Python ESP32
 '''
 import os
 
-# 目标文件夹位置
-folder_name = './.Trash-1000'
-file_list = os.listdir(folder_name)
+
 
 def is_folder(fname):
     '''
@@ -18,13 +16,34 @@ def is_folder(fname):
     return True
 
 
+def mvdir(folder_name):
+    file_list = os.listdir(folder_name)
+    print
+    for fname in file_list:
+        if is_folder(fname):
+            # 如果是文件夹就跳过
+            continue
+        try:
+            # 重命名
+            os.remove(fname, folder_name+'/'+fname)
+        except:
+            pass
 
-for fname in file_list:
-    if is_folder(fname):
-        # 如果是文件夹就跳过
-        continue
-    try:
-        # 重命名
-        os.rename(fname, folder_name+'/'+fname)
-    except:
-        pass
+def rmdir(folder_name):
+    file_list = os.listdir(folder_name)
+    print
+    for fname in file_list:
+        if is_folder(fname):
+            # 如果是文件夹就跳过
+            continue
+        try:
+            # 重命名
+            os.remove(folder_name+'/'+fname)
+        except:
+            pass
+    
+# 目标文件夹位置
+# folder_name = './.Trash-1000/files'
+
+rmdir('./.Trash-1000/files')
+rmdir('./.Trash-1000/info')

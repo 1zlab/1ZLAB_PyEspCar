@@ -59,11 +59,11 @@ class Motor:
             self.pwm = 0
     
     @property
-    def pwm(self):
+    def speed(self):
         return self._pwm
 
-    @pwm.setter
-    def pwm(self, value):
+    @speed.setter
+    def speed(self, value):
         value = int(value)
         if abs(value) > Motor.MOTOR_MAX_PWM:
             # 判断pwm的绝对值是否越界
@@ -79,6 +79,16 @@ class Motor:
             self.pwm_a.duty(abs(self._pwm))
             self.pwm_b.duty(0)
 
+    @property
+    def speed_percent(self):
+        '''获得百分比标识的小车'''
+        return (self.pwm / 1023) * 100
+
+    @speed_percent.setter
+    def speed_percent(self, value):
+        pwm = int(value / 100 * 1023)
+        self.pwm = pwm
+        
     def deinit(self):
         '''
         资源释放

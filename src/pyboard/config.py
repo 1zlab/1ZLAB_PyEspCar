@@ -29,8 +29,8 @@ config = {
     'LEFT_MOTOR_A_CHANNEL': 3,
     'LEFT_MOTOR_B_CHANNEL': 4,
     'LEFT_MOTOR_IS_REVERSE': False, # 左侧电机的安装方向
-    'LEFT_MOTOR_SPEED_CTL_KP': -10, # 左侧电机速度控制的PID参数 Kp
-    'LEFT_MOTOR_SPEED_CTL_KI': -20,  # 左侧电机速度控制的PID参数 Ki
+    'LEFT_MOTOR_SPEED_CTL_KP': -30, # 左侧电机速度控制的PID参数 Kp
+    'LEFT_MOTOR_SPEED_CTL_KI': -60,  # 左侧电机速度控制的PID参数 Ki
     'LEFT_MOTOR_SPEED_CTL_KD': 0,   # 左侧电机速度控制的PID参数 Kd
 
     # 右侧电机
@@ -39,9 +39,9 @@ config = {
     'RIGHT_MOTOR_TIMER_ID': 12, 
     'RIGHT_MOTOR_A_CHANNEL': 1,
     'RIGHT_MOTOR_B_CHANNEL': 2,
-    'RIGHT_MOTOR_IS_REVERSE': False, # 右侧电机的安装方向
-    'RIGHT_MOTOR_SPEED_CTL_KP': -20, # 左侧电机速度控制的PID参数 kp
-    'RIGHT_MOTOR_SPEED_CTL_KI': -2,  # 左侧电机速度控制的PID参数 ki
+    'RIGHT_MOTOR_IS_REVERSE': True, # 右侧电机的安装方向
+    'RIGHT_MOTOR_SPEED_CTL_KP': -30, # 左侧电机速度控制的PID参数 kp
+    'RIGHT_MOTOR_SPEED_CTL_KI': -60,  # 左侧电机速度控制的PID参数 ki
     'RIGHT_MOTOR_SPEED_CTL_KD': -0,  # 左侧电机速度控制的PID参数 kd
 
     # 编码器通用属性
@@ -65,7 +65,7 @@ config = {
     'CAR_WIDTH': 0.17667, # 小车的后轮轮距离，单位m
     'CAR_LENGTH': 0.15300, # 小车前后轮轮距，单位m
     'CAR_WHEEL_RADIUS': 0.0325, # 轮胎半径，单位m
-    'CAR_MAX_SPEED': 1.25, # 小车的最大直线速度, m/s
+    'CAR_MAX_SPEED': 3.0, # 小车的最大直线速度, m/s
     
     # 舵机通用配置
     'SERVO_PWM_FREQUENCY': 50, # 舵机控制的PWM

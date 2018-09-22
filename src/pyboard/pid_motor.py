@@ -1,11 +1,5 @@
 '''
-
 电机的PID控制(角度，速度)
-
-TODO 增量式PID 速度减到0的时候， PWM可能处在电机的死区位置
-
-
-
 '''
 from pyb import Timer
 from pid import IncrementalPID
@@ -78,7 +72,9 @@ class MotorSpeedControl(object):
             # 从编码器测得速度
             # 低通滤波器
             self._mvdis = self._mvdis * 0.8 + self.encoder.distance * 0.2
-
+        else:
+            self._mvdis = self._mvdis * 0.95 + self.encoder.distance * 0.05
+        
         self.encoder.reset()  # 重置编码器计数
 
         # 更新PID 获取新的PWM控制信号
