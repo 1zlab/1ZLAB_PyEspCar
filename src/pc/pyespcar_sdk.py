@@ -85,6 +85,12 @@ class PyCarSDK:
         else:
             self.send_command('GO_BACKWARD,{}'.format(speed_percent))
 
+    def move(self, left_motor_speed, right_motor_speed, delay_ms=None):
+        if delay_ms is not None:
+            self.send_command('MOVE,{},{},{}'.format(left_motor_speed, right_motor_speed, delay_ms))
+        else:
+            self.send_command('MOVE,{},{}'.format(left_motor_speed, right_motor_speed))
+    
     def cp_up(self, delta_angle=None):
         if delta_angle is None:
             delta_angle = self.cp_delta_angle

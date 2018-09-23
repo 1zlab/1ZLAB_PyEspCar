@@ -13,7 +13,6 @@ K_UP 小车前进
 K_DOWN 小车后退
 
 '''
-
 import paho.mqtt.client as mqtt
 import time
 import pygame
