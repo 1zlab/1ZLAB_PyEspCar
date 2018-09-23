@@ -85,6 +85,8 @@ class CloudPlatform:
         '''
         云台上臂向下
         '''
+        delta_angle = float(delta_angle)
+
         cur_angle = self.top_servo.angle()
         target_angle = cur_angle - delta_angle
 
@@ -95,6 +97,8 @@ class CloudPlatform:
         '''
         云台上臂向上
         '''
+        delta_angle = float(delta_angle)
+
         cur_angle = self.top_servo.angle()
         target_angle = cur_angle + delta_angle
 
@@ -105,6 +109,8 @@ class CloudPlatform:
         '''
         云台下臂向左
         '''
+        delta_angle = float(delta_angle)
+
         cur_angle = self.bottom_servo.angle()
         target_angle = cur_angle + delta_angle
 
@@ -115,6 +121,8 @@ class CloudPlatform:
         '''
         云台下臂向右
         '''
+        delta_angle = float(delta_angle)
+        
         cur_angle = self.bottom_servo.angle()
         target_angle = cur_angle - delta_angle
 
