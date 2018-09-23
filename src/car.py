@@ -17,9 +17,6 @@ class Car(object):
         '''
         Car构造器函数
         '''
-        # 小车的位姿
-        self = Pose(0, 0, 0, 0, 0)
-
         # 电池ADC采样
         self.battery_adc = BatteryVoltage(
             gpio_dict['BATTERY_ADC'],
@@ -42,7 +39,7 @@ class Car(object):
             print('[ERROR]: pca9885舵机驱动模块初始化失败')
             print('[Hint]: 请检查接线')
         
-        self.speed_percent = 50 # 小车默认速度
+        self.speed_percent = 70 # 小车默认速度
 
         # 左侧电机
         self.left_motor = Motor(0)
@@ -94,28 +91,28 @@ class Car(object):
         if speed_percent is None:
             speed_percent = self.speed_percent
 
-        self.left_motor.speed_percent = -speed_percent
-        self.right_motor.speed_percent = -speed_percent
+        self.left_motor.speed_percent = -1*speed_percent
+        self.right_motor.speed_percent = -1*speed_percent
 
         if delay_ms is not None:
             utime.sleep_ms(int(delay_ms))
             self.stop()
         
-    def turn_left(self, speed_percent=None, elay_ms=None):
+    def turn_left(self, speed_percent=None, delay_ms=None):
         '''
         小车左转
         '''
         if speed_percent is None:
             speed_percent = self.speed_percent
 
-        self.left_motor.speed_percent = -speed_percent
+        self.left_motor.speed_percent = -1* speed_percent
         self.right_motor.speed_percent = speed_percent
 
         if delay_ms is not None:
             utime.sleep_ms(int(delay_ms))
             self.stop()
 
-    def turn_right(self, speed_percent=None, elay_ms=None):
+    def turn_right(self, speed_percent=None, delay_ms=None):
         '''
         小车右转
         '''
@@ -123,13 +120,20 @@ class Car(object):
             speed_percent = self.speed_percent
 
         self.left_motor.speed_percent = speed_percent
-        self.right_motor.speed_percent = -speed_percent
+        self.right_motor.speed_percent = -1* speed_percent
 
         if delay_ms is not None:
             utime.sleep_ms(int(delay_ms))
             self.stop()
+    
+    def move(self, left_speed_percent, right_speed_percent,  delay_ms=None):
+        self.left_motor.speed_percent = left_speed_percent
+        self.right_motor.speed_percent = right_speed_percent
 
-
+        if delay_ms is not None:
+            utime.sleep_ms(int(delay_ms))
+            self.stop()
+    
     def deinit(self):
         '''
         释放资源

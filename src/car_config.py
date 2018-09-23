@@ -6,9 +6,6 @@ car_property = {
     'CAR_WIDTH': 0.17667, # 小车的后轮轮距离，单位m
     'CAR_LENGTH': 0.15300, # 小车前后轮轮距，单位m
     'WHEEL_RADIUS': 0.0325, # 轮胎半径，单位m
-    'WHEEL_TAKE_A_CIRCLE_PULSE': 330, # 电机旋转一周对应的脉冲数量 TODO delete
-    'MOTOR_REDUNCTION_GEAR_RATIO': 30/1, # 电机减速比
-    'ENCODER_RESOLUTION': 11, # 编码器分辨率： 电机旋转一周对应的脉冲数
 
     'CAR_CTL_MODE' :{ # 小车控制模式
         'SPEED': 1, # 速度控制(同时控制 speed与旋转角度)
@@ -19,34 +16,12 @@ car_property = {
     'MOTOR_PWM_FREQUENCY': 1000, # 电机控制与舵机控制的PWM
                             # 推荐频率 500Hz - 30000HZ
     'MOTOR_MAX_PWM':  1023, 
-    'PID_CTL_PERIOD': 0.010, # PID控制周期 单位s 0.010
     'CAR_MAX_SPEED': 1.25, # 小车的最大直线速度, m/s
-    'MOTOR_MAX_ANGLE': 2600, # 25ms内,电机最多转65度 1s -> 65 * 40
-    'LEFT_MOTOR_INSTALL_DIR': True, # 左侧电机的安装方向 TODO？
+
+    'LEFT_MOTOR_INSTALL_DIR': False, # 左侧电机的安装方向
     'LEFT_ENCODER_IS_REVERSE': False, # 左侧编码器是否为反
-    'LEFT_ENCODER_ANGLE_SCALE': 360/330, # 编码器计数与旋转角度之间的缩放因子
-                                        # 如果是四倍频的话 就是 360 / 1320
-    # 'LEFT_MOTOR_ANGLE_CTL_KP': -11.00, # 左侧电机角度控制的PID参数
-    # 'LEFT_MOTOR_ANGLE_CTL_KI': -1.20,
-    # 'LEFT_MOTOR_ANGLE_CTL_KD': -60.00,
-    # 'LEFT_MOTOR_ANGLE_CTL_MAX_BIAS_SUM': 1000, # 积分上限
-    'LEFT_MOTOR_SPEED_CTL_KP': -10, # 左侧电机速度控制的PID参数 -30.0
-    'LEFT_MOTOR_SPEED_CTL_KI': -2,
-    'LEFT_MOTOR_SPEED_CTL_KD': 0,
-    
     'RIGHT_MOTOR_INSTALL_DIR': False, # 右侧电机的安装方向
     'RIGHT_ENCODER_IS_REVERSE': False, # 右侧编码器是否为反
-    'RIGHT_ENCODER_ANGLE_SCALE': 360/330, # 编码器计数与旋转角度之间的缩放因子
-                                         # 如果是四倍频的话 就是 360 / 1320
-    # 'RIGHT_MOTOR_ANGLE_CTL_KP': -11.00, # 右侧电机角度控制的PID参数
-    # 'RIGHT_MOTOR_ANGLE_CTL_KI': -1.20,
-    # 'RIGHT_MOTOR_ANGLE_CTL_KD': -60.00,
-    # 'RIGHT_MOTOR_ANGLE_CTL_MAX_BIAS_SUM': 1000, # 积分上限
-    'RIGHT_MOTOR_SPEED_CTL_KP': -10, # 左侧电机速度控制的PID参数 -30.0
-    'RIGHT_MOTOR_SPEED_CTL_KI': -2,
-    'RIGHT_MOTOR_SPEED_CTL_KD': -0,
-
-    'CAR_ONE_SHOT_TIMER_ID': 2, # 单次计时器的ID
 
     'BOTTOM_SERVO_IDX': 0, # 底部舵机的序号
     'BOTTOM_SERVO_MIN_DUTY': 96, # 底部舵机 最小占空比

@@ -51,6 +51,8 @@ class Servo:
             # 更新当前的角度值
             self._angle = value
     
+    def reset(self):
+        self.angle(self.default_angle)
 
 class CloudPlatform:
     '''
@@ -119,6 +121,10 @@ class CloudPlatform:
         if target_angle >= 0:
             self.bottom_servo.angle(target_angle)
     
+    def reset(self):
+        
+        self.top_servo.reset()
+        self.bottom_servo.reset()
 
 if __name__ == '__main__':
     '''

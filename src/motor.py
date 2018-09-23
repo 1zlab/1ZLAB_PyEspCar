@@ -47,16 +47,11 @@ class Motor:
         # 设置电机的PWM
         # self.pwm(self._pwm)
     
-    def stop(self, is_lock=False):
+    def stop(self):
         '''
         电机停止转动
         '''
-        if is_lock:
-            # 电机是否自锁
-            self.pwm_a.duty(1023)
-            self.pwm_b.duty(1023)
-        else:
-            self.pwm = 0
+        self.speed = 0
     
     @property
     def speed(self):
@@ -82,12 +77,12 @@ class Motor:
     @property
     def speed_percent(self):
         '''获得百分比标识的小车'''
-        return (self.pwm / 1023) * 100
+        return (self.speed / 1023) * 100
 
     @speed_percent.setter
     def speed_percent(self, value):
-        pwm = int(value / 100 * 1023)
-        self.pwm = pwm
+        speed = int(value / 100 * 1023)
+        self.speed = speed
         
     def deinit(self):
         '''
