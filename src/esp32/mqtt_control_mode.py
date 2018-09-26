@@ -61,4 +61,4 @@ while True:
     # 查看是否有数据传入
 	# 有的话就执行 mqtt_callback
 	client.check_msg()
-	time.sleep(0.1)
+	# time.sleep(0.1)
