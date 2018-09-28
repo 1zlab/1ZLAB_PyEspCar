@@ -90,7 +90,13 @@ class PyCarSDK:
             self.send_command('MOVE,{},{},{}'.format(left_motor_speed, right_motor_speed, delay_ms))
         else:
             self.send_command('MOVE,{},{}'.format(left_motor_speed, right_motor_speed))
-    
+
+    def set_bottom_servo_angle(self, angle):
+        self.send_command('SET_BOTTOM_SERVO_ANGLE,{}'.format(angle))
+
+    def set_top_servo_angle(self, angle):
+        self.send_command('SET_TOP_SERVO_ANGLE,{}'.format(angle))
+
     def cp_up(self, delta_angle=None):
         if delta_angle is None:
             delta_angle = self.cp_delta_angle

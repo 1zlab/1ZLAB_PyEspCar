@@ -24,7 +24,9 @@ cmd_dict = {
     'CP_RIGHT': car.cloud_platform.right,
     'CP_RESET': car.cloud_platform.reset,
     'STOP': car.stop,
-    'MOVE': car.move
+    'MOVE': car.move,
+    'SET_BOTTOM_SERVO_ANGLE':car.cloud_platform.bottom_servo.angle,
+    'SET_TOP_SERVO_ANGLE': car.cloud_platform.top_servo.angle,
 }
 
 

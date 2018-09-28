@@ -44,6 +44,7 @@ class Servo:
             # 返回当前舵机的角度
             return self._angle
         else:
+            value = float(value)
             # 计算舵机的占空比
             duty = self._angle2duty(value)
             # 执行指令

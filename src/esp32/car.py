@@ -138,7 +138,7 @@ class Car(object):
 
         self.left_motor.speed_percent = speed_percent
         self.right_motor.speed_percent = -1* speed_percent
-
+        
         if delay_ms is not None:
             utime.sleep_ms(int(delay_ms))
             self.stop()

@@ -16,7 +16,6 @@ K_DOWN 小车后退
 import paho.mqtt.client as mqtt
 import time
 import pygame
-import time
 from pyespcar_sdk import PyCarSDK
 
 size = width, height = 320, 240
