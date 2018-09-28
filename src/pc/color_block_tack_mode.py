@@ -104,10 +104,7 @@ def cp_top_servo_control(y_offset, kp=-5, max_delta_angle=2):
         next_top_servo_angle = 0
     elif next_top_servo_angle > 180:
         next_top_servo_angle = 180
-    
-    # 重新矫正增量
-    delta_top_angle = next_top_servo_angle - cur_top_servo_angle
-    
+        
     # 舵机动作
     sdk.set_top_servo_angle(next_top_servo_angle)
     # 更新当前顶部部舵机的角度
@@ -161,8 +158,12 @@ def stat0_stop(x_offset, y_offset, area_offset):
 
     # 小车停止
     sdk.stop()
+    print('STEP1-------<<<<<<<<<<<<')
+    # time.sleep(2)
 
     if abs(x_offset) > posi_min_threshold or abs(y_offset) > posi_min_threshold:
+        print('STEP2-------<<<<<<<<<<<<')
+        # time.sleep(2)
         # 如果色块中心在画面存在偏移
         cur_status = 1
 
@@ -172,13 +173,14 @@ def stat1_cp_ctl(x_offset, y_offset, area_offset):
     global sdk
     global posi_min_threshold
     
+
     if abs(x_offset) < posi_min_threshold and abs(y_offset) < posi_min_threshold:
         # 目前色块在画面正中心, 接下来电机转动，旋转小车
         cur_status = 2
     else:
         # 舵机云台PID控制
-        cp_bottom_servo_control(x_offset, kp=-5, max_delta_angle=2)
-        cp_top_servo_control(y_offset, kp=-2, max_delta_angle=2)
+        cp_bottom_servo_control(x_offset, kp=-5, max_delta_angle=5)
+        cp_top_servo_control(y_offset, kp=-5, max_delta_angle=5)
 
 
 
@@ -209,25 +211,63 @@ def stat2_car_turn(x_offset, y_offset, area_offset):
     global cur_status
     global sdk
     global cur_bottom_servo_angle
-    
-    
+    global video_cap
+
     # 舵机云台复位
-    cp_bottom_servo_control(x_offset, kp=-20, max_delta_angle=20)
+    # cp_bottom_servo_control(x_offset, kp=-20, max_delta_angle=20)
     # cp_top_servo_control(y_offset, kp=0, max_delta_angle=2)
+    # 复位
 
-
+    # 计算角度偏移量
     angle_offset = cur_bottom_servo_angle - 135
-
-    if abs(x_offset) < 0.15 and abs(angle_offset) < 15:
-        # 返回STOP的状态
-        cur_status = 0
-    elif abs(x_offset) > 0.2:
-        sdk.stop()
-        cur_status = 1
-    else:
-        # 小车转向控制
-        car_turn_pid_control(angle_offset)
+    
+    if abs(angle_offset) < 5:
+        return
+    # 舵机复位
+    sdk.set_bottom_servo_angle(135)
+    cur_bottom_servo_angle = 135
+    
+    
+    count = 1
+    while True:
+        ret,img = video_cap.read()
+        img_bin, rects = color_block_finder(img, lowerb=ref_lowerb, upperb=ref_upperb, min_h=5, min_w=5)
         
+        if len(rects) > 0:
+            rect = max(rects, key=lambda rect: rect[2]*rect[3])
+            canvas = draw_color_block_rect(img, [rect])
+            x_offset, y_offset = get_posi_offset(img, rect)
+            
+            if abs(x_offset) < 0.1:
+                print('Rotate End')
+                sdk.stop()
+                cur_status = 0
+                break
+
+        else:
+            canvas = img
+        
+        cv2.imshow('result', canvas)
+        cv2.imshow('binary', img_bin)
+        
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
+
+        if count > 0:
+            count -= 1
+            continue
+        
+        # 向目标方向旋转
+        if angle_offset > 0:
+            sdk.turn_right(speed_percent=70)
+        elif angle_offset < 0:
+            sdk.turn_left(speed_percent=70)
+
+        
+        
+        
+        
+
     
 
 def stat3_go(x_offset, y_offset, area_offset):
@@ -238,8 +278,8 @@ def stat3_go(x_offset, y_offset, area_offset):
     print('-----STAT3-----')
 
 
-posi_min_threshold = 0.1
-area_min_threshold = 0.1
+posi_min_threshold = 0.05
+area_min_threshold = 0.05
 
 STATS_LIST = [stat0_stop, stat1_cp_ctl, stat2_car_turn, stat3_go] 
 cur_status = 0
@@ -290,8 +330,8 @@ while True:
             canvas = draw_color_block_rect(img, [rect])
         else:
             canvas = img
-            sdk.cp_reset()
-            sdk.stop()
+            # sdk.cp_reset()
+            # sdk.stop()
             # time.sleep(1)
 
         cv2.imshow('result', canvas)
