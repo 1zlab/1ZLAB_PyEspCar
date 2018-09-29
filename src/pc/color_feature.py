@@ -5,6 +5,15 @@
 import numpy as np
 import cv2
 
+def bin_img_preprocess(img_bin):
+    '''
+    二值化图像的预处理
+    '''
+    # 创建 核
+    kernel = np.ones((8,9), np.uint8)
+    # 膨胀
+    dilate_img = cv2.dilate(img_bin, kernel, iterations=1)
+    return dilate_img
 
 def color_block_finder(img, lowerb, upperb, 
                         min_w=0, max_w=None, min_h=0, max_h=None):
@@ -15,9 +24,13 @@ def color_block_finder(img, lowerb, upperb,
     img_hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
     # 根据颜色阈值转换为二值化图像
     img_bin = cv2.inRange(img_hsv, lowerb, upperb)
+    # 图像预处理
+    img_bin = bin_img_preprocess(img_bin)
 
     # 寻找轮廓（只寻找最外侧的色块）
     bimg, contours, hier = cv2.findContours(img_bin, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    
+    
     # 声明画布 拷贝自img
     canvas = np.copy(img)
     # 外接矩形区域集合
