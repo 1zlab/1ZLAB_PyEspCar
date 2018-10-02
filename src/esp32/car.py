@@ -86,7 +86,8 @@ class Car(object):
         self.right_motor.speed_percent = speed_percent
 
         if delay_ms is not None:
-            utime.sleep_ms(int(delay_ms))
+            delay_ms = int(float(delay_ms))
+            utime.sleep_ms(delay_ms)
             self.stop()
 
     def go_backward(self, speed_percent=None, delay_ms=None):
@@ -104,7 +105,8 @@ class Car(object):
         self.right_motor.speed_percent = -1*speed_percent
 
         if delay_ms is not None:
-            utime.sleep_ms(int(delay_ms))
+            delay_ms = int(float(delay_ms))
+            utime.sleep_ms(delay_ms)
             self.stop()
         
     def turn_left(self, speed_percent=None, delay_ms=None):
@@ -114,15 +116,14 @@ class Car(object):
         if speed_percent is None:
             speed_percent = self.speed_percent
         else:
-            speed_percent = float(speed_percent)
-        if delay_ms is not None:
-            delay_ms = int(delay_ms)
+            speed_percent = float(speed_percent)            
 
         self.left_motor.speed_percent = -1* speed_percent
         self.right_motor.speed_percent = speed_percent
 
         if delay_ms is not None:
-            utime.sleep_ms(int(delay_ms))
+            delay_ms = int(float(delay_ms))
+            utime.sleep_ms(delay_ms)
             self.stop()
 
     def turn_right(self, speed_percent=None, delay_ms=None):
@@ -133,27 +134,26 @@ class Car(object):
             speed_percent = self.speed_percent
         else:
             speed_percent = float(speed_percent)
-        if delay_ms is not None:
-            delay_ms = int(delay_ms)
-
+        
         self.left_motor.speed_percent = speed_percent
         self.right_motor.speed_percent = -1* speed_percent
         
         if delay_ms is not None:
-            utime.sleep_ms(int(delay_ms))
+            delay_ms = int(float(delay_ms))
+            utime.sleep_ms(delay_ms)
             self.stop()
     
     def move(self, left_speed_percent, right_speed_percent,  delay_ms=None):
         left_speed_percent = float(left_speed_percent)
         right_speed_percent = float(right_speed_percent)
-        if delay_ms is not None:
-            delay_ms = int(delay_ms)
+        
             
         self.left_motor.speed_percent = left_speed_percent
         self.right_motor.speed_percent = right_speed_percent
 
         if delay_ms is not None:
-            utime.sleep_ms(int(delay_ms))
+            delay_ms = int(float(delay_ms))
+            utime.sleep_ms(delay_ms)
             self.stop()
     
     def deinit(self):

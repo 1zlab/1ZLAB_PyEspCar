@@ -155,24 +155,6 @@ def stat1_cp_ctl(x_offset, y_offset, area_offset):
 
 
 
-# car_turn_pid = PositionPID(kp=-100, ki=-10, kd=0, target=0, max_bias_sum=None, max_bias_win=10)
-# def car_turn_pid_control(angle_offset, kp=-30, max_speed_percent=60):
-#     # 舵机转向的PID控制
-#     global car_turn_pid
-
-#     if angle_offset < 0:
-#         speed_percent = kp * angle_offset/135 + 35
-#     else:
-#         speed_percent = kp * angle_offset/135 - 35
-    
-#     if abs(speed_percent) > max_speed_percent:
-#         speed_percent = max_speed_percent if speed_percent > 0 else -max_speed_percent
-    
-#     if speed_percent > 0:
-#         sdk.turn_right(speed_percent=abs(speed_percent))
-#     else:
-#         sdk.turn_left(speed_percent=abs(speed_percent))
-
 state = False
 
 def toggle_state():
@@ -220,60 +202,11 @@ def stat2_car_turn(x_offset, y_offset, area_offset):
         print('start refresh frame')
         
         cv2.waitKey(int(delay_ms))
-        # # 在舵机转向的同时，video_capture也在刷新
-        # state=False
-        # timer = threading.Timer(delay_ms/1000*1.5, toggle_state)
-        # while True:
-        #     if state:
-        #         break
-        #     # 不断刷新video capture
-        #     ret,img = video_cap.read()
-
+        
         print('end refresh frame')    
         # 进入下一个状态
         cur_status = 3
         
-    # print('Angle Offset {}')
-    # # 舵机复位
-    # sdk.set_bottom_servo_angle(135)
-    # cur_bottom_servo_angle = 135
-    
-    # # 需要延时一段时间，让舵机云台复位（更新image）
-    # for i in range(10):
-    #     ret, img = video_cap.read()
-    
-    # while True:
-    #     ret,img = video_cap.read()
-    #     img_bin, rects = color_block_finder(img, lowerb=ref_lowerb, upperb=ref_upperb, min_h=5, min_w=5)
-
-        
-    #     if len(rects) > 0:
-    #         rect = max(rects, key=lambda rect: rect[2]*rect[3])
-    #         canvas = draw_color_block_rect(img, [rect])
-    #         x_offset, y_offset = get_posi_offset(img, rect)
-            
-    #         if abs(x_offset) < 0.1:
-    #             print('Rotate End')
-    #             sdk.stop()
-    #             cur_status = 3
-    #             break
-    #     else:
-    #         canvas = img
-            
-        
-    #     cv2.imshow('result', canvas)
-    #     cv2.imshow('binary', img_bin)
-        
-    #     if cv2.waitKey(1) & 0xFF == ord('q'):
-    #         break
-
-    #     # 向目标方向旋转
-    #     if angle_offset > 0:
-    #         print('Rotate Left')
-    #         sdk.turn_left(speed_percent=55)
-    #     elif angle_offset < 0:
-    #         print('Rotate Right')
-    #         sdk.turn_right(speed_percent=55)    
 
 def stat3_go(x_offset, y_offset, area_offset):
     '''

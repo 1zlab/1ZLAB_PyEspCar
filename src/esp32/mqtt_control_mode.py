@@ -6,6 +6,7 @@ import time
 import micropython
 from machine import Timer
 from car import Car
+import gc
 
 # 设定紧急意外缓冲区的大小为100
 micropython.alloc_emergency_exception_buf(100)
@@ -54,13 +55,31 @@ MQTT_TOPIC_ID = b'PYESPCAR_CTL_MSG'
 
 client = MQTTClient(CLIENT_ID, SERVER)
 client.set_callback(mqtt_callback)
-client.connect()
+print('[INFO] Connect to the MQTT Broker')
+result = client.connect()
+print('result code : {}'.format(result))
+if result == 0:
+    print('[INFO] Sucess!! Connect to the MQTT Broker')
+else:
+    print('[INFO] Fail to connect to mqtt broker')
+    exit(-1)
 
+print('[INFO] Subscribe Topic: {}'.format(MQTT_TOPIC_ID))
 client.subscribe(MQTT_TOPIC_ID)
 
 
 while True:
-    # 查看是否有数据传入
-	# 有的话就执行 mqtt_callback
-	client.check_msg()
-	# time.sleep(0.1)
+    try:
+        # 查看是否有数据传入
+	    # 有的话就执行 mqtt_callback
+	    client.check_msg()
+	    # utime.sleep_ms(5)
+    except KeyboardInterrupt as e:
+        print(e)
+        print('[INFO] Quit MQTT check_msg mode')
+        break
+    except Exception as e:
+        print('[ERROR] MQTT')
+        print(e)
+        gc.collect()
+        client.connect()
