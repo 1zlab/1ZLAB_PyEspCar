@@ -8,7 +8,8 @@
 * 3 电机走直线，前进/后退， 此时
 * 4 停止， 如果offset大于开启阈值，则进入步骤1
 
-
+TODO 改成动态的 差速运动
+TODO 有条件的复位，阻止往复舵机摆动
 '''
 import cv2
 import time
@@ -16,8 +17,10 @@ import paho.mqtt.client as mqtt
 from color_feature import *
 from pyespcar_sdk import PyCarSDK
 from pid import PositionPID
+import threading
 
 cur_status = 0
+
 
 def init_video_capture(phone_ip):
     '''初始化手机WIFI摄像头'''
@@ -63,11 +66,12 @@ def get_area_offset(img, rect, ref_area=0.2):
         area_offset = 0
     return area_offset
 
+
 cur_top_servo_angle = 90
 cur_bottom_servo_angle = 135
 
-
 def cp_bottom_servo_control(x_offset, kp=-5, max_delta_angle=2):
+    '''底部舵机的PID控制'''
     global sdk
     global cur_bottom_servo_angle
 
@@ -93,6 +97,7 @@ def cp_bottom_servo_control(x_offset, kp=-5, max_delta_angle=2):
     cur_bottom_servo_angle = next_bottom_servo_angle
 
 def cp_top_servo_control(y_offset, kp=-5, max_delta_angle=2):
+    '''顶部舵机的PID控制'''
     global sdk
     global cur_top_servo_angle
 
@@ -120,6 +125,7 @@ def stat0_stop(x_offset, y_offset, area_offset):
     '''小车停止状态'''
     global cur_status
     global sdk
+    global posi_min_threshold
 
     # 小车停止
     sdk.stop()
@@ -149,27 +155,29 @@ def stat1_cp_ctl(x_offset, y_offset, area_offset):
 
 
 
-
 # car_turn_pid = PositionPID(kp=-100, ki=-10, kd=0, target=0, max_bias_sum=None, max_bias_win=10)
+# def car_turn_pid_control(angle_offset, kp=-30, max_speed_percent=60):
+#     # 舵机转向的PID控制
+#     global car_turn_pid
 
-def car_turn_pid_control(angle_offset, kp=-30, max_speed_percent=60):
-    global car_turn_pid
-
-    if angle_offset < 0:
-        speed_percent = kp * angle_offset/135 + 35
-    else:
-        speed_percent = kp * angle_offset/135 - 35
+#     if angle_offset < 0:
+#         speed_percent = kp * angle_offset/135 + 35
+#     else:
+#         speed_percent = kp * angle_offset/135 - 35
     
-    if abs(speed_percent) > max_speed_percent:
-        speed_percent = max_speed_percent if speed_percent > 0 else -max_speed_percent
+#     if abs(speed_percent) > max_speed_percent:
+#         speed_percent = max_speed_percent if speed_percent > 0 else -max_speed_percent
     
-    if speed_percent > 0:
-        sdk.turn_right(speed_percent=abs(speed_percent))
-    else:
-        sdk.turn_left(speed_percent=abs(speed_percent))
+#     if speed_percent > 0:
+#         sdk.turn_right(speed_percent=abs(speed_percent))
+#     else:
+#         sdk.turn_left(speed_percent=abs(speed_percent))
 
+state = False
 
-
+def toggle_state():
+    global state
+    state = not state
 
 def stat2_car_turn(x_offset, y_offset, area_offset):
     '''
@@ -179,81 +187,132 @@ def stat2_car_turn(x_offset, y_offset, area_offset):
     global sdk
     global cur_bottom_servo_angle
     global video_cap
-
-    # 舵机云台复位
-    # cp_bottom_servo_control(x_offset, kp=-20, max_delta_angle=20)
-    # cp_top_servo_control(y_offset, kp=0, max_delta_angle=2)
-    # 复位
-
+    global posi_min_threshold
+    global state
     # 计算角度偏移量
     angle_offset = cur_bottom_servo_angle - 135
     
-    if abs(angle_offset) < 0.5:
-        print('angle_offset: {}  less than {}'.format(angle_offset, 0.5))
+    # 偏角在大于30左右的时候，延时与转角之间类似线性关系
+    if abs(angle_offset) < 30:
+        print('[STAT3] Sangle_offset: {}  less than {}'.format(angle_offset, 30))
         cur_status = 3
         return
-    
-    print('Angle Offset {}')
-    # 舵机复位
-    sdk.set_bottom_servo_angle(135)
-    cur_bottom_servo_angle = 135
-    
-    # 需要延时一段时间，让舵机云台复位（更新image）
-    for i in range(20):
-        ret, img = video_cap.read()
-    
-    while True:
-        ret,img = video_cap.read()
-        img_bin, rects = color_block_finder(img, lowerb=ref_lowerb, upperb=ref_upperb, min_h=5, min_w=5)
-
+    else:
+        # 计算得到延时时间， 根据当前电压可以调节这个比例系数
+        delay_ms = abs(angle_offset) * 2
+        # 速度开启满速
+        speed_percent = 100
         
-        if len(rects) > 0:
-            rect = max(rects, key=lambda rect: rect[2]*rect[3])
-            canvas = draw_color_block_rect(img, [rect])
-            x_offset, y_offset = get_posi_offset(img, rect)
-            
-            if abs(x_offset) < 0.3:
-                print('Rotate End')
-                sdk.stop()
-                cur_status = 3
-                break
-        else:
-            canvas = img
-            
-        
-        cv2.imshow('result', canvas)
-        cv2.imshow('binary', img_bin)
-        
-        if cv2.waitKey(1) & 0xFF == ord('q'):
-            break
+        # 舵机复位
+        sdk.set_bottom_servo_angle(135)
+        cur_bottom_servo_angle = 135
 
         # 向目标方向旋转
         if angle_offset > 0:
             print('Rotate Left')
-            sdk.turn_left(speed_percent=50)
+            sdk.turn_left(speed_percent=speed_percent, delay_ms=delay_ms)
         elif angle_offset < 0:
             print('Rotate Right')
-            sdk.turn_right(speed_percent=50)    
+            sdk.turn_right(speed_percent=speed_percent, delay_ms=delay_ms)
+
+        
+        print('delay_ms: {}'.format(delay_ms))
+        print('start refresh frame')
+        
+        cv2.waitKey(int(delay_ms))
+        # # 在舵机转向的同时，video_capture也在刷新
+        # state=False
+        # timer = threading.Timer(delay_ms/1000*1.5, toggle_state)
+        # while True:
+        #     if state:
+        #         break
+        #     # 不断刷新video capture
+        #     ret,img = video_cap.read()
+
+        print('end refresh frame')    
+        # 进入下一个状态
+        cur_status = 3
+        
+    # print('Angle Offset {}')
+    # # 舵机复位
+    # sdk.set_bottom_servo_angle(135)
+    # cur_bottom_servo_angle = 135
+    
+    # # 需要延时一段时间，让舵机云台复位（更新image）
+    # for i in range(10):
+    #     ret, img = video_cap.read()
+    
+    # while True:
+    #     ret,img = video_cap.read()
+    #     img_bin, rects = color_block_finder(img, lowerb=ref_lowerb, upperb=ref_upperb, min_h=5, min_w=5)
+
+        
+    #     if len(rects) > 0:
+    #         rect = max(rects, key=lambda rect: rect[2]*rect[3])
+    #         canvas = draw_color_block_rect(img, [rect])
+    #         x_offset, y_offset = get_posi_offset(img, rect)
+            
+    #         if abs(x_offset) < 0.1:
+    #             print('Rotate End')
+    #             sdk.stop()
+    #             cur_status = 3
+    #             break
+    #     else:
+    #         canvas = img
+            
+        
+    #     cv2.imshow('result', canvas)
+    #     cv2.imshow('binary', img_bin)
+        
+    #     if cv2.waitKey(1) & 0xFF == ord('q'):
+    #         break
+
+    #     # 向目标方向旋转
+    #     if angle_offset > 0:
+    #         print('Rotate Left')
+    #         sdk.turn_left(speed_percent=55)
+    #     elif angle_offset < 0:
+    #         print('Rotate Right')
+    #         sdk.turn_right(speed_percent=55)    
 
 def stat3_go(x_offset, y_offset, area_offset):
     '''
     小车走直线（前进或后退）
     '''
     global sdk
+    global posi_min_threshold
+    global cur_status
+    # cp_top_servo_control(y_offset, kp=-5, max_delta_angle=5)
+    # cp_bottom_servo_control(x_offset, kp=-5, max_delta_angle=5)
+    if abs(x_offset) > 3*posi_min_threshold or abs(y_offset) > 3*posi_min_threshold:
+        sdk.stop()
+        cur_status = 1
+        print('STAT3 ==> STAT1')
+        return
 
-    cp_top_servo_control(y_offset, kp=-5, max_delta_angle=5)
-    cp_bottom_servo_control(x_offset, kp=-5, max_delta_angle=5)
-    if area_offset > 0.25:
-        sdk.go_backward()
-    elif area_offset < 0.2:
-        sdk.go_forward()
+    print('[STAT3] area_offset = {}'.format(area_offset))
+    if area_offset > 0.1:
+        print('[STAT3] Go Backward')
+        sdk.go_backward(speed_percent=55)
+    elif area_offset < -0.1:
+        print('[STAT3] Go Forward')
+        sdk.go_forward(speed_percent=55)
     else:
         cur_status = 0
 
-    
 
+mqtt_client = mqtt.Client()
+# mqtt_client.on_message = on_message
+mqtt_client.connect('localhost', 1883, 60)
+sdk = PyCarSDK(mqtt_client, is_debug=True)
+
+sdk.cp_reset()
+sdk.turn_left(speed_percent=0)
+
+# TODO 调整这个阈值
+# 舵机可以很准确
 posi_min_threshold = 0.05
-area_min_threshold = 0.05
+area_min_threshold = 0.1
 
 STATS_LIST = [stat0_stop, stat1_cp_ctl, stat2_car_turn, stat3_go] 
 cur_status = 0
@@ -263,16 +322,10 @@ video_cap = None
 phone_ip = '192.168.43.1'
 init_video_capture(phone_ip)
 
-mqtt_client = mqtt.Client()
-# mqtt_client.on_message = on_message
-mqtt_client.connect('localhost', 1883, 60)
-sdk = PyCarSDK(mqtt_client, is_debug=True)
-
 cv2.namedWindow('result', flags=cv2.WINDOW_NORMAL | cv2.WINDOW_FREERATIO)
 cv2.namedWindow('binary', flags=cv2.WINDOW_NORMAL | cv2.WINDOW_FREERATIO)
 
-sdk.cp_reset()
-sdk.turn_left(speed_percent=0)
+
 
 ignore_cnt = 100
 ref_lowerb = (0, 108, 25)
@@ -281,10 +334,6 @@ ref_upperb = (14, 219, 222)
 while True:
     ret,img = video_cap.read()
     if ret:
-        if ignore_cnt > 0:
-            ignore_cnt -= 1
-            continue
-        
         img_bin, rects = color_block_finder(img, lowerb=ref_lowerb, upperb=ref_upperb, min_h=20, min_w=20)
         if len(rects) >= 1:
             rect = max(rects, key=lambda rect: rect[2]*rect[3])
@@ -321,6 +370,8 @@ while True:
         cv2.imwrite('sreenshot.png', canvas)
         # 这里做一下适当的延迟，每帧延时0.05s钟
         if cv2.waitKey(1) & 0xFF == ord('q'):
+            sdk.stop()
+            sdk.cp_reset()
             # 断开MQTT连接
             sdk.mqtt_client.disconnect()
             break
