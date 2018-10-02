@@ -328,13 +328,62 @@ cv2.namedWindow('binary', flags=cv2.WINDOW_NORMAL | cv2.WINDOW_FREERATIO)
 
 
 ignore_cnt = 100
-ref_lowerb = (0, 108, 25)
-ref_upperb = (14, 219, 222)
+ref_lowerb = (144, 109, 27)
+ref_upperb = (184, 211, 206)
+
+# ref_lowerb = (101, 111, 0)
+# ref_upperb = (140, 255, 255)
+
+lowerb = (0, 0, 0)
+upperb = (255, 255, 255)
+# 更新阈值
+def updateThreshold(x):
+
+    global lowerb
+    global upperb
+
+    minH = cv2.getTrackbarPos('minH','binary')
+    maxH = cv2.getTrackbarPos('maxH','binary')
+    minS = cv2.getTrackbarPos('minS','binary')
+    maxS = cv2.getTrackbarPos('maxS', 'binary')
+    minV = cv2.getTrackbarPos('minV', 'binary')
+    maxV = cv2.getTrackbarPos('maxV', 'binary')
+    
+    lowerb = np.int32([minH, minS, minV])
+    upperb = np.int32([maxH, maxS, maxV])
+    
+    print('更新阈值')
+    print(lowerb)
+    print(upperb)
+
+
+cv2.createTrackbar('minH','binary',0,255,updateThreshold)
+cv2.createTrackbar('maxH','binary',0,255,updateThreshold)
+cv2.createTrackbar('minS','binary',0,255,updateThreshold)
+cv2.createTrackbar('maxS','binary',0,255,updateThreshold)
+cv2.createTrackbar('minV','binary',0,255,updateThreshold)
+cv2.createTrackbar('maxV','binary',0,255,updateThreshold)
+
+time.sleep(0.5)
+
+cv2.setTrackbarPos('maxH', 'binary', ref_upperb[0])
+cv2.setTrackbarPos('minH', 'binary', ref_lowerb[0])
+cv2.setTrackbarPos('maxS', 'binary', ref_upperb[1])
+cv2.setTrackbarPos('minS', 'binary', ref_lowerb[1])
+cv2.setTrackbarPos('maxV', 'binary', ref_upperb[2])
+cv2.setTrackbarPos('minV', 'binary', ref_lowerb[2])
+
+updateThreshold(None)
+
+# 过滤帧
+for i in range(ignore_cnt):
+    ret, img = video_cap.read()
+
 
 while True:
     ret,img = video_cap.read()
     if ret:
-        img_bin, rects = color_block_finder(img, lowerb=ref_lowerb, upperb=ref_upperb, min_h=20, min_w=20)
+        img_bin, rects = color_block_finder(img, lowerb=lowerb, upperb=upperb, min_h=20, min_w=20)
         if len(rects) >= 1:
             rect = max(rects, key=lambda rect: rect[2]*rect[3])
             x_offset, y_offset = get_posi_offset(img, rect)
