@@ -61,3 +61,11 @@ python3 object_tracker_node.py
 
 
 在这个代码里面，我们用到了 **有限状态机 Finite State Machine。 **， 并通过Python的状态(State)设计模式实现该算法。
+
+
+
+
+
+教程制作出来需要一段时间，大家可以先扫码加群，课程会在群里发布。
+
+![ad](https://upload-images.jianshu.io/upload_images/1199728-b57eb90afb54f4f8.PNG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1000)
