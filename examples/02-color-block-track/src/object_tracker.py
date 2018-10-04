@@ -8,10 +8,10 @@ import time
 
 class ObjectTracker:
     '''物体追踪小车'''
-    OBJECT_CENTER_OFFSET_THRESHOLD = 0.05
+    OBJECT_CENTER_OFFSET_THRESHOLD = 0.1
     OBJECT_AREA_THRESHOLD = 0.1
     POINT_TURN_SPEED_PERCENT = 100
-    GO_STRAIGHT_SPEED_PERCENT = 60
+    GO_STRAIGHT_SPEED_PERCENT = 50
     def __init__(self, sdk):
         # PyESPCar的SDK
         self.sdk = sdk
@@ -28,9 +28,9 @@ class ObjectTracker:
         # 物体是否在视野里面
         self.is_object_in_view = False
         # 底部舵机的PID
-        self.bottom_servo_pid = IncrementalPID(kp=0, ki=-5, max_result=1, min_result=-1)
+        self.bottom_servo_pid = IncrementalPID(kp=-1, ki=-3, max_result=1, min_result=-1)
         # 顶部舵机的PID
-        self.top_servo_pid = IncrementalPID(kp=0, ki=-5, max_result=1, min_result=-1)
+        self.top_servo_pid = IncrementalPID(kp=-1, ki=-3, max_result=1, min_result=-1)
 
         # 状态与函数之间的映射
         self.on_state_func_dict = {
@@ -40,7 +40,7 @@ class ObjectTracker:
             CarServoTrack: self.on_servo_track,
             CarPointTurn: self.on_point_turn,
             CarPointTurnLeft: self.on_point_turn_left,
-            CarPointTurnLeft: self.on_point_turn_right,
+            CarPointTurnRight: self.on_point_turn_right,
             CarGoStraight: self.on_go_straight,
             CarGoBackward: self.on_go_backward,
             CarGoForward: self.on_go_forward,
@@ -58,8 +58,8 @@ class ObjectTracker:
         print('{},{},{},{}'.format(is_object_in_view, x_offset, y_offset, area_offset))
         
         self.is_object_in_view = is_object_in_view
-        self.x_offset = x_offset
-        self.y_offset = y_offset
+        self.x_offset = self.x_offset * 0.2  + x_offset * 0.8
+        self.y_offset = self.y_offset * 0.2 + y_offset * 0.8
         self.area_offset = area_offset
 
         if abs(self.x_offset) < self.OBJECT_CENTER_OFFSET_THRESHOLD:
@@ -142,41 +142,49 @@ class ObjectTracker:
         '''原地旋转'''
         print('[INFO] on point turn')
         if self.angle_offset > 0:
-            self.switch_state(CarPointTurnRight)
-        else:
             self.switch_state(CarPointTurnLeft)
+        else:
+            self.switch_state(CarPointTurnRight)
 
     def on_point_turn_left(self):
         '''向左原地旋转'''
         print('[INFO] on point turn left')
-        speed_percent = self.POINT_TURN_SPEED_PERCENT
+
         delay_ms = self.get_point_turn_delay_ms()
-        self.sdk.turn_left(speed_percent=speed_percent, delay_ms=delay_ms)
-        time.sleep(delay_ms/1000)
         # 底部舵机复位
         self.sdk.set_bottom_servo_angle(self.sdk.BOTTOM_SERVO_DEFAULT_ANGLE)
+        time.sleep(100/1000)
+
+        speed_percent = self.POINT_TURN_SPEED_PERCENT
+        self.sdk.turn_left(speed_percent=speed_percent, delay_ms=delay_ms)
+        time.sleep(delay_ms/1000)
+        
         self.switch_state(CarGoStraight)
 
     def on_point_turn_right(self):
         '''向右原地旋转'''
         print('[INFO] on point turn right')
-        speed_percent = self.POINT_TURN_SPEED_PERCENT
         delay_ms = self.get_point_turn_delay_ms()
-        self.sdk.turn_right(speed_percent=speed_percent, delay_ms=delay_ms)
-        time.sleep(delay_ms/1000)
         # 底部舵机复位
         self.sdk.set_bottom_servo_angle(self.sdk.BOTTOM_SERVO_DEFAULT_ANGLE)
+        time.sleep(100/1000)
+        
+        speed_percent = self.POINT_TURN_SPEED_PERCENT
+        self.sdk.turn_right(speed_percent=speed_percent, delay_ms=delay_ms)
+        time.sleep(delay_ms/1000)
+        
         self.switch_state(CarGoStraight)
 
     def on_go_straight(self):
         '''小车走直线'''
         print('[INFO] on go straight')
-        is_x_offset = abs(self.x_offset) > 3 * self.OBJECT_CENTER_OFFSET_THRESHOLD
-        is_y_offset = abs(self.y_offset) > 3 * self.OBJECT_CENTER_OFFSET_THRESHOLD
+        is_x_offset = abs(self.x_offset) > 2 * self.OBJECT_CENTER_OFFSET_THRESHOLD
+        is_y_offset = abs(self.y_offset) > 2 * self.OBJECT_CENTER_OFFSET_THRESHOLD
 
         if is_x_offset or is_y_offset:
+            self.sdk.stop()
             # 偏移过大，舵机云台校准，避免丢失对象
-            self.switch_state(CarStop)
+            self.switch_state(CarServoTrack)
 
         elif self.area_offset > 0.05:
             # 根据物体面积判断需要前进还是后退
@@ -213,6 +221,16 @@ class ObjectTracker:
         else:
             self.sdk.stop()
             print('[INFO] no object in view!!!!!')
+
+            if type(self.last_state) == CarGoForward:
+                self.sdk.cp_down(20)
+            elif type(self.last_state) == CarGoBackward:
+                self.sdk.cp_up(20)
+            elif type(self.last_state) == CarPointTurnLeft:
+                self.sdk.cp_right(20)
+            elif type(self.last_state) == CarPointTurnRight:
+                self.sdk.cp_left(20)
+            
 
     def switch_state(self, state):
         '''切换小车的状态'''

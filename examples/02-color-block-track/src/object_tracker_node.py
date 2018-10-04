@@ -9,7 +9,7 @@ def update_object_tracker(message):
     timestamp, is_object_in_view, x_offset, y_offset, area_offset = message.split(',')
     now = int(round(time.time()*1000))
 
-    if now - int(timestamp) > 100:
+    if now - int(timestamp) > 50:
         # 时间间隔大于50ms，数据过期
         print('[INFO] data is out of date')
         return
