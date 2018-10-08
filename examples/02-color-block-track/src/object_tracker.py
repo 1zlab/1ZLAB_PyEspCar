@@ -90,7 +90,6 @@ class ObjectTracker:
         '''响应小车停止'''
         print('[INFO] on car stop')
         
-        # BUG 下面的执行不到 on_message 中断了？
         print('{}'.format(self.is_object_in_middle()))
         if type(self.last_state) != CarStop:
             # 小车停车

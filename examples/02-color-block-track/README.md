@@ -2,13 +2,25 @@
 
 
 
+## 简介
+
+![pyespcar tracker](./image/小车色块追踪.png)
+
+使用PyESPCar还有OpenCV实现色块追踪, OpenCV识别色块,然后计算偏移量,通过MQTT协议发送给PyESPCar小车. 源码见:https://github.com/1zlab/1ZLAB_PyEspCar/tree/master/examples/02-color-block-track
+
+
+
 ## 效果演示
+
+效果视频已上传至B站:
+
+[PyESPCar色块追踪效果演示-1Z实验室](https://www.bilibili.com/video/av33370828)
+
+![色块追踪-片头.png](./image/色块追踪-片头.png)
 
 ![color block](./image/pyespcar_color_block_track.png)
 
 
-
-效果视频见：`./video/PyESPCar色块追踪效果V1-20181002.mkv`
 
 
 

@@ -2,6 +2,8 @@
 
 
 
+![mqtt control](./image/MQTT远程控制.png)
+
 使用PyGame做键盘事件监听，然后映射到`pyespcar sdk`的方法上面。
 
 运行程序：

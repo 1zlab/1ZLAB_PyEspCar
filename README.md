@@ -41,6 +41,20 @@
 
 * 自主研发**ESP32 Web IDE**， [IDE地址](http://dev.1zlab.com)
 
+## 综合例程
+
+[PyESPCar按键控制模式](https://github.com/1zlab/1ZLAB_PyEspCar/tree/master/examples/01-keyboards_ctl_mode)
+
+
+
+![mqtt keyboards](./examples/01-keyboards_ctl_mode/image/MQTT远程控制.png)
+
+
+
+[PyESPCar色块追踪](https://github.com/1zlab/1ZLAB_PyEspCar/tree/master/examples/02-color-block-track)
+
+![color track](./examples/02-color-block-track/image/小车色块追踪.png)
+
 
 
 ## 机械结构与硬件
