@@ -64,7 +64,7 @@ class PyCarSDK:
                 if event.key in self.KEY_FUNC_MAP:
                     self.KEY_FUNC_MAP[event.key]()
             elif event.type == pygame.KEYUP:
-                if event.BOTTOM_SERVO_DEFAULT_ANGLEkey in [pygame.K_LEFT, pygame.K_RIGHT, pygame.K_UP, pygame.K_DOWN]:
+                if event.key in [pygame.K_LEFT, pygame.K_RIGHT, pygame.K_UP, pygame.K_DOWN]:
                     self.stop()
 
     def send_command(self, cmd_str):

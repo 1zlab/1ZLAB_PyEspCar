@@ -33,8 +33,9 @@ car_property = {
     'TOP_SERVO_MIN_DUTY': 120, # 底部舵机 最小占空比
     'TOP_SERVO_MAX_DUTY': 520, # 底部舵机 最大占空比
     'TOP_SERVO_ANGLE_RANGE': 180, # 底部舵机角度范围
-    'TOP_SERVO_DEFAULT_ANGLE': 90, # 底部舵机的默认角度
-
+    'TOP_SERVO_DEFAULT_ANGLE': 60, # 底部舵机的默认角度
+    'TOP_SERVO_MIN_ANGLE': 20,
+    'TOP_SERVO_MAX_ANGLE': 80,
     'I2C_FREQUENCY': 10000,
 }
 

@@ -1,69 +1,6 @@
 import pygame
 from car_config import car_property
 
-'''
-NOTE：使用Python实现有限状态机FSM设计模式，用于管理小车的状态
-'''
-class CarState(object):
-    '''小车的状态基类'''
-    name = "state"
-    allowed = []
-    
-    def switch(self, state):
-        if state.name in self.allowed:
-            print('[INFO] change state: {} to : {}'.format(self, state.name))
-            self.__class__ = state
-        else:
-            print('[Error] could not change to state: {}'.format(state.name))
-    def __str__(self):
-        return self.name
-
-class CarOff(CarState):
-    '''小车关闭'''
-    name = 'CAR_OFF'
-    allowed = ['CAR_STOP']
-
-class CarStop(CarState):
-    '''小车停止'''
-    name = 'CAR_STOP'
-    allowed = ['CAR_SERVO_TRACK', 'CAR_SEARCH_AROUND', 'CAR_GO_FORWARD', 'CAR_GO_BACKWARD', 'CAR_OFF']
-
-class CarServoTrack(CarState):
-    '''舵机云台追踪'''
-    name = 'CAR_SERVO_TRACK'
-    allowed = ['CAR_STOP', 'CAR_POINT_TURN_LEFT', 'CAR_POINT_TURN_RIGHT', 'CAR_OFF']
-
-class CarPointTurn(CarState):
-    '''小车原地旋转'''
-    name = 'CAR_POINT_TURN'
-    allowed = ['CAR_STOP', 'CAR_OFF']
-
-class CarPointTurnLeft(CarPointTurn):
-    '''小车原地向左旋转'''
-    name = 'CAR_POINT_TURN_LEFT'
-
-class CarPointTurnRight(CarPointTurn):
-    '''小车原地向右旋转'''
-    name = 'CAR_POINT_TURN_RIGHT'
-
-class CarGoStraight(CarState):
-    '''小车走直线'''
-    name = 'CAR_GO_STRAIGHT'
-    allowed = ['CAR_STOP', 'CAR_OFF']
-
-class CarGoForward(CarGoStraight):
-    '''小车前进'''
-    name = 'CAR_GO_FORWARD'
-    
-class CarGoBackward(CarGoStraight):
-    '''小车后退'''
-    name = 'CAR_GO_BACKWARD'
-
-
-class CarSearchAround(CarState):
-    '''小车搜寻模式'''
-    name = 'CAR_SEARCH_AROUND'
-    allowed = ['CAR_SERVO_TRACK', 'CAR_OFF']
 
 
 class PyCarSDK:
@@ -83,20 +20,23 @@ class PyCarSDK:
     # 顶部舵机默认角度
     TOP_SERVO_DEFAULT_ANGLE = car_property['TOP_SERVO_DEFAULT_ANGLE']
     
-    
+    TOP_SERVO_MIN_ANGLE = car_property['TOP_SERVO_MIN_ANGLE']
+    TOP_SERVO_MAX_ANGLE = car_property['TOP_SERVO_MAX_ANGLE']
+
     def __init__(self, mqtt_client, is_debug=False):
         # 是否开启调试模式
         self.is_debug = is_debug
         # MQTT的客户端
         self.mqtt_client = mqtt_client
         # 设置小车的默认速度
-        self.speed = PyCarSDK.DEFAULT_CAR_SPEED
+        self.speed = self.DEFAULT_CAR_SPEED
         # 设置默认的舵机云台角度变换值
-        self.cp_delta_angle = PyCarSDK.DEFAULT_CP_DELTA_ANGLE
+        self.cp_delta_angle = self.DEFAULT_CP_DELTA_ANGLE
         # 记录当前底部舵机的角度
-        self.bottom_servo_angle = PyCarSDK.DEFAULT_BOTTOM_SERVO_ANGLE
+        self.bottom_servo_angle = self.BOTTOM_SERVO_DEFAULT_ANGLE
         # 记录顶部舵机的角度
-        self.top_servo_angle = PyCarSDK.DEFAULT_TOP_SERVO_ANGLE    
+        self.top_servo_angle = self.TOP_SERVO_DEFAULT_ANGLE
+            
         # 键盘事件映射字典
         self.KEY_FUNC_MAP = {
             pygame.K_LEFT: self.turn_left,
@@ -132,7 +72,7 @@ class PyCarSDK:
         通过MQTT发送指令
         '''
         if self.is_debug:
-            print('Topic: {}'.format(PyCarSDK.MQTT_TOPIC_ID))
+            print('Topic: {}'.format(self.MQTT_TOPIC_ID))
             print('SEND:  {}'.format(cmd_str))
         
         self.mqtt_client.publish(self.MQTT_TOPIC_ID, cmd_str)
@@ -223,8 +163,8 @@ class PyCarSDK:
         '''
         设置底部舵机的角度
         '''
-        if angle > PyCarSDK.BOTTOM_SERVO_ANGLE_RANGE:
-            angle = PyCarSDK.BOTTOM_SERVO_ANGLE_RANGE
+        if angle > self.BOTTOM_SERVO_ANGLE_RANGE:
+            angle = self.BOTTOM_SERVO_ANGLE_RANGE
         elif angle < 0:
             angle = 0
         
@@ -237,10 +177,10 @@ class PyCarSDK:
         '''
         设置顶部的舵机角度
         '''
-        if angle > PyCarSDK.TOP_SERVO_ANGLE_RANGE:
-            angle = PyCarSDK.TOP_SERVO_ANGLE_RANGE
-        elif angle < 0:
-            angle = 0
+        if angle > self.TOP_SERVO_MAX_ANGLE:
+            angle = self.TOP_SERVO_MAX_ANGLE
+        elif angle < self.TOP_SERVO_MIN_ANGLE:
+            angle = self.TOP_SERVO_MIN_ANGLE
 
         self.send_command('SET_TOP_SERVO_ANGLE,{}'.format(angle))
         self.top_servo_angle = angle
@@ -284,13 +224,13 @@ class PyCarSDK:
         
         angle = self.bottom_servo_angle - delta_angle
         self.set_bottom_servo_angle(angle)
-
+    
     def cp_reset(self):
         '''
         舵机复位
         '''
-        self.set_bottom_servo_angle(PyCarSDK.BOTTOM_SERVO_DEFAULT_ANGLE)
-        self.set_top_servo_angle(PyCarSDK.TOP_SERVO_DEFAULT_ANGLE)
+        self.set_bottom_servo_angle(self.BOTTOM_SERVO_DEFAULT_ANGLE)
+        self.set_top_servo_angle(self.TOP_SERVO_DEFAULT_ANGLE)
 
         if self.is_debug:
             print('[INFO] cloud platform reset')
