@@ -154,7 +154,7 @@ PyESPCar的工程文件见:
 > 对git不熟悉的同学, 需要自学一下git相关的操作.
 
 ```bash
-git clone git@github.com:1zlab/1ZLAB_PyEspCar.git
+git clone https://github.com/1zlab/1ZLAB_PyEspCar.git
 ```
 
 
