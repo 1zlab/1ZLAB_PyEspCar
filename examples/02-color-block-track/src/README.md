@@ -75,7 +75,7 @@ python3 color_block_finder_node.py
 
 
 
-![res](./image/res.jpg)
+![res](../image/res.jpg)
 
 
 
