@@ -41,6 +41,9 @@
 
 * 自主研发**ESP32 Web IDE**， [IDE地址](http://dev.1zlab.com)
 
+## 开发文档
+
+* [PyESPCar开发环境配置](/doc/PyESPCar开发环境配置_pyespcar-environment-config//doc/PyESPCar开发环境配置_pyespcar-environment-config.md)
 ## 综合例程
 
 [PyESPCar按键控制模式](https://github.com/1zlab/1ZLAB_PyEspCar/tree/master/examples/01-keyboards_ctl_mode)
