@@ -74,7 +74,9 @@ PyGame是用于写游戏的.
 
 因为我们用到了PyGame的键盘事件监听, 所以需要安装这个包.
 
-
+```bash
+sudo pip3 install pygame
+```
 
 ### MicroPython-ESP32开发环境配置
 
@@ -104,7 +106,7 @@ PyESPCar是基于MicroPython-ESP32的, 所以MicroPython-ESP32的基本操作, �
 一个是固件烧录, 你需要安装`esptool`
 
 ```bash
-sudo pip install esptool --upgrade
+sudo pip3 install esptool --upgrade
 ```
 
 详情见: [MicroPython-ESP32固件烧录](https://github.com/1zlab/1ZLAB_MicroPython_ESP32_Tutorial/blob/master/01_MicroPython-ESP32%E5%9B%BA%E4%BB%B6%E7%83%A7%E5%BD%95/MicroPython-ESP32%E5%9B%BA%E4%BB%B6%E7%83%A7%E5%BD%95.md)

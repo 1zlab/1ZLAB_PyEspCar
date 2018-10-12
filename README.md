@@ -43,7 +43,7 @@
 
 ## 开发文档
 
-* [PyESPCar开发环境配置](/doc/PyESPCar开发环境配置_pyespcar-environment-config//doc/PyESPCar开发环境配置_pyespcar-environment-config.md)
+* [PyESPCar开发环境配置](./doc/PyESPCar%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE_pyespcar-environment-config/PyESPCar%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE_pyespcar-environment-config.md)
 ## 综合例程
 
 [PyESPCar按键控制模式](https://github.com/1zlab/1ZLAB_PyEspCar/tree/master/examples/01-keyboards_ctl_mode)
