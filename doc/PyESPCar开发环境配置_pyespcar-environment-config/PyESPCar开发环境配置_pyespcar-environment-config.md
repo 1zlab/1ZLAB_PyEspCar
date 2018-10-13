@@ -2,9 +2,13 @@
 
 
 
-
-
 ## 写在前面
+
+自己配置Ubuntu开发环境略麻烦, 后续1Z实验室会提供配置好的虚拟机给大家.
+
+
+
+## 为什么用Ubuntu?
 
 我们的PyESPCar开发教程以及OpenCV图像处理部分的教程都是在Ubuntu下进行的, 因为Ubuntu下开发环境更加友好.  同时针对**VIP**用户, 我们还提供Ubuntu远程协助的服务.
 
@@ -40,9 +44,19 @@ sudo apt-get install git
 
 
 
+## pip3
+
+Ubuntu16.04自带的默认Python版本是python3.5, 需要安装`pip3` 作为python的包管理工具. 
+
+```bash
+sudo apt-get install python3-pip
+```
+
+
+
 ## Python科学计算工具包
 
-
+做科学计算需要安装下面的一些工具包
 
 ```bash
 sudo pip3 install jupyter ipython numpy scipy matplotlib
@@ -60,7 +74,11 @@ sudo pip3 install jupyter ipython numpy scipy matplotlib
 
 
 
-> OpenCV的安装难度比较大, 可以暂时跳过.
+> **注意** OpenCV的从源码编译安装难度比较大.
+>
+> 另外ROS也不支持Anaconda, 所以如果你之前用Anaconda安装的opencv, 可以在.bashrc里面把anaconda的路径屏蔽掉.
+
+
 
 ### PyGame
 
@@ -120,7 +138,7 @@ sudo apt-get install picocom
 通过AMPY进行文件同步, 需要安装AMPY
 
 ```bash
-sudo pip install adafruit-ampy --upgrade
+sudo pip3 install adafruit-ampy --upgrade
 ```
 
 详情见: [利用AMPY进行文件同步](https://github.com/1zlab/1ZLAB_MicroPython_ESP32_Tutorial/blob/master/18_%E5%88%A9%E7%94%A8AMPY%E8%BF%9B%E8%A1%8C%E6%96%87%E4%BB%B6%E5%90%8C%E6%AD%A5/%E5%88%A9%E7%94%A8AMPY%E8%BF%9B%E8%A1%8C%E6%96%87%E4%BB%B6%E5%90%8C%E6%AD%A5.md)
