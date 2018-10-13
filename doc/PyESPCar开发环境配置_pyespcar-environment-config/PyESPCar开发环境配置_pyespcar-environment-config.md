@@ -139,6 +139,14 @@ MQTT相关的, 需要安装**mosquitto**
 sudo apt-get install mosquitto mosquitto-clients 
 ```
 
+使用pip3 安装`paho-mqtt`
+
+```bash
+sudo pip3 install paho-mqtt
+```
+
+
+
 详情见: [MQTT入门之项目实战](https://github.com/1zlab/1ZLAB_MicroPython_ESP32_Tutorial/blob/master/19_MQTT%E5%85%A5%E9%97%A8%E4%B9%8B%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%88%98/MQTT%E5%85%A5%E9%97%A8%E4%B9%8B%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%88%98.md)
 
 
