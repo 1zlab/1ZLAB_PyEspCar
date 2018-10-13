@@ -40,15 +40,13 @@ sudo apt-get install git
 
 
 
-### Anaconda
-
-Anaconda是Python的科学计算包. 
-
-[在Ubuntu下安装Anaconda科学计算包](https://github.com/1zlab/1ZLAB_OpenCV_Tutorial/blob/master/%E9%99%84%E5%BD%95A.OpenCV%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/Ubuntu/2.Ubuntu%E5%AE%89%E8%A3%85Anaconda/%E5%9C%A8Ubuntu%E4%B8%8B%E5%AE%89%E8%A3%85Anaconda%E7%A7%91%E5%AD%A6%E8%AE%A1%E7%AE%97%E5%8C%85.md)
+## Python科学计算工具包
 
 
 
-ipython, numpy等等, 这些包, 在安装Anaconda的时候, 也就一同安装好了.
+```bash
+sudo pip3 install jupyter ipython numpy scipy matplotlib
+```
 
 
 
@@ -56,17 +54,13 @@ ipython, numpy等等, 这些包, 在安装Anaconda的时候, 也就一同安装�
 
 
 
-图像处理方面需要安装**python-opencv**
+为了方便大家在之后的ROS(机器人操作系统) 里面使用opencv, 这里建议大家从源码编译OpenCV, 教程见: 
 
-使用anaconda安装opencv比较简单:
-
-- [通过Anaconda安装OpenCV](https://github.com/1zlab/1ZLAB_OpenCV_Tutorial/blob/master/%E9%99%84%E5%BD%95A.OpenCV%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/Ubuntu/3.%E9%80%9A%E8%BF%87Anaconda%E5%AE%89%E8%A3%85OpenCV/%E9%80%9A%E8%BF%87Anaconda%E5%AE%89%E8%A3%85OpenCV.md)
-
-更多OpenCV教程见 [1zlab.com](1zlab.com)
-
-教程里面有从源码编译并安装OpenCV的教程, 但是不建议小白尝试. 但是对于数莓派用户来说, Anaconda是不可以用的, OpenCV也只能从源码编译.
+[从源码编译OpenCV-Ubuntu](https://github.com/1zlab/1ZLAB_OpenCV_Tutorial/blob/master/%E9%99%84%E5%BD%95A.OpenCV%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/Ubuntu/5.%E4%BB%8E%E6%BA%90%E7%A0%81%E7%BC%96%E8%AF%91OpenCV/%E4%BB%8E%E6%BA%90%E7%A0%81%E7%BC%96%E8%AF%91OpenCV.md)
 
 
+
+> OpenCV的安装难度比较大, 可以暂时跳过.
 
 ### PyGame
 
