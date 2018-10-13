@@ -52,6 +52,16 @@ ipython, numpy等等, 这些包, 在安装Anaconda的时候, 也就一同安装�
 
 
 
+安装成功之后改为清华镜像
+
+```bash
+conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/free/
+conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/main/
+conda config --set show_channel_urls yes
+```
+
+参见[Anaconda 镜像使用帮助](https://mirrors.tuna.tsinghua.edu.cn/help/anaconda/)
+
 ### 安装OpenCV
 
 
@@ -112,7 +122,11 @@ PyESPCar是基于MicroPython-ESP32的, 所以MicroPython-ESP32的基本操作, �
 一个是固件烧录, 你需要安装`esptool`
 
 ```bash
-sudo pip install esptool --upgrade
+conda config --add channels kvedala
+```
+
+```bash
+conda install -c kvedala esptool 
 ```
 
 详情见: [MicroPython-ESP32固件烧录](https://github.com/1zlab/1ZLAB_MicroPython_ESP32_Tutorial/blob/master/01_MicroPython-ESP32%E5%9B%BA%E4%BB%B6%E7%83%A7%E5%BD%95/MicroPython-ESP32%E5%9B%BA%E4%BB%B6%E7%83%A7%E5%BD%95.md)
