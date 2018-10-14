@@ -42,9 +42,7 @@ git是工程版本管理工具, 你可以使用Git从Github克隆PyESPCar的开�
 sudo apt-get install git
 ```
 
-
-
-## pip3
+### pip3
 
 Ubuntu16.04自带的默认Python版本是python3.5, 需要安装`pip3` 作为python的包管理工具. 
 
@@ -54,7 +52,7 @@ sudo apt-get install python3-pip
 
 
 
-## Python科学计算工具包
+### Python科学计算工具包
 
 做科学计算需要安装下面的一些工具包
 
@@ -66,18 +64,15 @@ sudo pip3 install jupyter ipython numpy scipy matplotlib
 
 ### 安装OpenCV
 
+非官方的OpenCV预编译的包.
+同时安装opencv的main还有contrib部分.
 
+```bash
+pip install opencv-contrib-python
+```
 
-为了方便大家在之后的ROS(机器人操作系统) 里面使用opencv, 这里建议大家从源码编译OpenCV, 教程见: 
-
-[从源码编译OpenCV-Ubuntu](https://github.com/1zlab/1ZLAB_OpenCV_Tutorial/blob/master/%E9%99%84%E5%BD%95A.OpenCV%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/Ubuntu/5.%E4%BB%8E%E6%BA%90%E7%A0%81%E7%BC%96%E8%AF%91OpenCV/%E4%BB%8E%E6%BA%90%E7%A0%81%E7%BC%96%E8%AF%91OpenCV.md)
-
-
-
-> **注意** OpenCV的从源码编译安装难度比较大.
->
-> 另外ROS也不支持Anaconda, 所以如果你之前用Anaconda安装的opencv, 可以在.bashrc里面把anaconda的路径屏蔽掉.
-
+详情见文档:
+[opencv-python 3.4.3.18](https://pypi.org/project/opencv-python/)
 
 
 ### PyGame
