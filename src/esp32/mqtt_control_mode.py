@@ -48,8 +48,8 @@ def mqtt_callback(topic, msg):
     if topic == MQTT_TOPIC_ID:
         command_process(msg.decode())
 	
-
-SERVER = '192.168.43.16'
+# 这里改成本机(PC)的IP地址
+SERVER = '192.168.2.220'
 CLIENT_ID = 'PYESPCAR_A0'
 MQTT_TOPIC_ID = b'PYESPCAR_CTL_MSG'
 
