@@ -303,6 +303,18 @@ ping 192.168.2.221
 
 
 
+**自我检查, 文件名命名, 内容有没有粘贴错误!!!!**
+
+
+
+## 打开PyESPCar的电源开关
+
+打开PyESPCar电源开关, 电源指示灯会亮.
+
+**这一步很重要!!!**
+
+
+
 ## 关闭WebREPL模式
 
 WebREPL模式会跟MQTT通信**资源抢占**, 导致网络不稳定.
@@ -341,7 +353,8 @@ WebREPL模式会跟MQTT通信**资源抢占**, 导致网络不稳定.
 3. 通过upip安装了`emp-1zlab`  与`umqtt.simple`  [使用upip安装包](https://github.com/1zlab/1ZLAB_MicroPython_ESP32_Tutorial/blob/master/16_%E4%BD%BF%E7%94%A8upip%E5%AE%89%E8%A3%85%E5%8C%85/%E4%BD%BF%E7%94%A8upip%E5%AE%89%E8%A3%85%E5%8C%85.md) ,  [MQTT入门之项目实战](https://github.com/1zlab/1ZLAB_MicroPython_ESP32_Tutorial/blob/master/19_MQTT%E5%85%A5%E9%97%A8%E4%B9%8B%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%88%98/MQTT%E5%85%A5%E9%97%A8%E4%B9%8B%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%88%98.md)
 4. 将PyESPCar的工程文件, 传入到了ESP32的文件系统中.
 5. 关闭esp32的webrepl模式
-6. 按下开发板上的reset按钮, 重启后自动进入MQTT远程控制模式.
+6. 打开PyESPCar的**电源开关**
+7. 按下开发板上的**reset按钮**, 重启后自动进入MQTT远程控制模式.
 
 
 

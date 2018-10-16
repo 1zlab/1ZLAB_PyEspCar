@@ -11,13 +11,13 @@
 
 下图是我们的**PyESPCar V2.1**版本的实物图, 舵机云台上面挂载了手机, 可以通过手机WIFI传图, 然后在PC上用OpenCV做图像处理, 然后PC发送控制指令给PyESPCar WIFI小车. 
 
-![0914_1](./image/0914_1.jpg)
 
 
+## 购买PyESPCar
 
-> 小车采用预售的模式, 购买小车联系1Z实验室阿凯  
-> QQ： 244561792
-> 微信：xingshunkai
+![pyespcar-taobao.png](./image/pyespcar-taobao.png)
+
+[淘宝-PyESPCar购买链接](https://item.taobao.com/item.htm?id=579247648473)
 
 
 
